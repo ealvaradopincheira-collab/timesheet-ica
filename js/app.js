@@ -686,10 +686,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 6. Carga Inicial de Datos Reales Consolidados del Equipo (7 Integrantes)
   function initSeedData() {
-    const isV4 = localStorage.getItem('ica_timesheet_v4_imported');
-    if (!isV4 && window.ICA_REAL_TEAM_DATA && window.ICA_REAL_TEAM_DATA.length > 0) {
+    const isV5 = localStorage.getItem('ica_timesheet_v5_imported');
+    if (!isV5 && window.ICA_REAL_TEAM_DATA && window.ICA_REAL_TEAM_DATA.length > 0) {
       localStorage.setItem('ica_timesheet_data', JSON.stringify(window.ICA_REAL_TEAM_DATA));
-      localStorage.setItem('ica_timesheet_v4_imported', 'true');
+      localStorage.setItem('ica_timesheet_v5_imported', 'true');
     }
   }
 });

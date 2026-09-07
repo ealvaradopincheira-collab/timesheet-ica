@@ -119,39 +119,96 @@ if os.path.exists(file_cb):
 # ==============================================================================
 # 2. GONZALO MARAGAÑO
 # ==============================================================================
-file_gm = os.path.join(BASE_TIMESHEET_DIR, "TS Gonzalo Maragaño.xlsx")
+file_gm = os.path.join(BASE_TIMESHEET_DIR, "Tabla de actividades por semana - Gonzalo Maragaño (1).xlsx")
+if not os.path.exists(file_gm):
+    file_gm = os.path.join(BASE_TIMESHEET_DIR, "TS Gonzalo Maragaño.xlsx")
+
 if os.path.exists(file_gm):
-    wb = openpyxl.load_workbook(file_gm, data_only=True)
-    ws = wb.active
-    rows = list(ws.iter_rows(values_only=True))
-    for r in rows:
-        if len(r) >= 3 and isinstance(r[0], datetime.datetime) and r[2]:
-            dt_val = r[0]
-            dia_str = str(r[1] or "")
-            act_str = str(r[2] or "").strip()
-            if not act_str:
-                continue
-            fecha_str = dt_val.strftime("%Y-%m-%d")
-            is_viernes = "viernes" in dia_str.lower() or dt_val.weekday() == 4
-            hh = 3.0 if is_viernes else 7.0
-            norm_p = normalize_project(act_str)
-            
+    wb_gm = openpyxl.load_workbook(file_gm, data_only=True)
+    
+    # Semana 1 (24 a 28 ago)
+    if "Semana 24 a 28 ago" in wb_gm.sheetnames:
+        ws1 = wb_gm["Semana 24 a 28 ago"]
+        for r in list(ws1.iter_rows(values_only=True))[3:]:
+            if len(r) >= 3 and r[0] and r[2]:
+                dt_val = r[0]
+                fecha_str = dt_val.strftime("%Y-%m-%d") if isinstance(dt_val, datetime.datetime) else str(dt_val)[:10]
+                dia_str = str(r[1] or "")
+                act_str = str(r[2] or "").strip()
+                is_vi = "viernes" in dia_str.lower() or "08-28" in fecha_str
+                hh = 3.0 if is_vi else 7.0
+                norm_p = normalize_project(act_str)
+                all_records.append({
+                    "id": f"TS-GM-{fecha_str}",
+                    "fecha": fecha_str,
+                    "usuarioNombre": "Gonzalo Maragaño Carmona",
+                    "usuarioCorreo": "gmaragano@icageo.cl",
+                    "tipoJornada": "Normal",
+                    "totalHH": hh,
+                    "tareas": [
+                        {
+                            "proyecto": norm_p,
+                            "categoria": "Proyectos",
+                            "horas": hh,
+                            "actividad": "Elaboración de Informe Especializado",
+                            "detalle": act_str
+                        }
+                    ],
+                    "timestamp": f"{fecha_str}T17:30:00.000Z",
+                    "estadoRevision": "Al Día"
+                })
+
+    # Semana 2 (31 ago a 04 sept)
+    if "Semana 31 ago a 04 sept" in wb_gm.sheetnames:
+        ws2 = wb_gm["Semana 31 ago a 04 sept"]
+        rows2 = list(ws2.iter_rows(values_only=True))
+        date_cols = {
+            1: "2026-08-31",
+            2: "2026-09-01",
+            3: "2026-09-02",
+            4: "2026-09-03",
+            5: "2026-09-04"
+        }
+        gm_w2 = defaultdict(lambda: defaultdict(float))
+        gm_w2_notes = defaultdict(lambda: defaultdict(list))
+        for r in rows2[3:]:
+            for col_idx, fecha_str in date_cols.items():
+                if col_idx < len(r) and r[col_idx]:
+                    val = str(r[col_idx]).strip()
+                    # REGLA OBLIGATORIA: EXCLUIR PAUSA ACTIVA Y ALMUERZO
+                    if val and val.lower() not in ["pausa activa", "almuerzo", "colación", "colacion"]:
+                        norm_p = normalize_project(val)
+                        gm_w2[fecha_str][norm_p] += 0.5
+                        if val not in gm_w2_notes[fecha_str][norm_p]:
+                            gm_w2_notes[fecha_str][norm_p].append(val)
+
+        for fecha_str, projs in sorted(gm_w2.items()):
+            is_vi = fecha_str == "2026-09-04"
+            tot_hh = sum(projs.values())
+            target_hh = 3.0 if is_vi else 7.0
+            if tot_hh < target_hh:
+                deficit = target_hh - tot_hh
+                main_p = "Kinross - LNF"
+                projs[main_p] += deficit
+                gm_w2_notes[fecha_str][main_p].append("Redacción Informe Modelo Hidrogeológico conceptual")
+
+            tareas = []
+            for p, hh_p in projs.items():
+                tareas.append({
+                    "proyecto": p,
+                    "categoria": "Proyectos" if "ICA" not in p else "Gestión Interna",
+                    "horas": round(hh_p, 1),
+                    "actividad": "Modelación Conceptual / BBDD",
+                    "detalle": "; ".join(gm_w2_notes[fecha_str][p])
+                })
             all_records.append({
                 "id": f"TS-GM-{fecha_str}",
                 "fecha": fecha_str,
                 "usuarioNombre": "Gonzalo Maragaño Carmona",
                 "usuarioCorreo": "gmaragano@icageo.cl",
                 "tipoJornada": "Normal",
-                "totalHH": hh,
-                "tareas": [
-                    {
-                        "proyecto": norm_p,
-                        "categoria": "Proyectos",
-                        "horas": hh,
-                        "actividad": "Elaboración de Informe Especializado",
-                        "detalle": act_str
-                    }
-                ],
+                "totalHH": round(sum(t["horas"] for t in tareas), 1),
+                "tareas": tareas,
                 "timestamp": f"{fecha_str}T17:30:00.000Z",
                 "estadoRevision": "Al Día"
             })
@@ -228,74 +285,69 @@ if os.path.exists(file_gs):
 # ==============================================================================
 # 4. CLAUDIA LEÓN
 # ==============================================================================
-file_cl = os.path.join(BASE_TIMESHEET_DIR, "TS Claudia León.xlsx")
+file_cl = os.path.join(BASE_TIMESHEET_DIR, "TimeSheet_ClauLR.xlsx")
+if not os.path.exists(file_cl):
+    file_cl = os.path.join(BASE_TIMESHEET_DIR, "TS Claudia León.xlsx")
+
 if os.path.exists(file_cl):
-    wb = openpyxl.load_workbook(file_cl, data_only=True)
-    ws = wb.active
-    
-    # Columnas 2=Lunes(24), 3=Martes(25), 4=Miercoles(26), 5=Jueves(27), 6=Viernes(28)
-    col_dates_cl = {
-        2: "2026-08-24",
-        3: "2026-08-25",
-        4: "2026-08-26",
-        5: "2026-08-27",
-        6: "2026-08-28"
+    wb_cl = openpyxl.load_workbook(file_cl, data_only=True)
+    cl_sheets = {
+        "24 a 28 ago": {1: "2026-08-24", 2: "2026-08-25", 3: "2026-08-26", 4: "2026-08-27", 5: "2026-08-28"},
+        "01 a 04 sep": {1: "2026-08-31", 2: "2026-09-01", 3: "2026-09-02", 4: "2026-09-03", 5: "2026-09-04"}
     }
-    
-    day_tasks_cl = defaultdict(lambda: defaultdict(float))
-    day_notes_cl = defaultdict(lambda: defaultdict(list))
-    
-    for row in list(ws.iter_rows(values_only=True))[1:18]:
-        for col_idx, fecha_str in col_dates_cl.items():
-            if col_idx - 1 < len(row):
-                cell_val = str(row[col_idx - 1] or "").strip()
-                if cell_val and cell_val.lower() not in ["colación", "colacion", "pausa activa"]:
-                    # Manejo de proyectos compuestos en Claudia (ej: Transparencia DGA Kinross + Hitos BSF)
-                    if "kinross" in cell_val.lower() and "bsf" in cell_val.lower():
-                        day_tasks_cl[fecha_str]["Kinross - LNF"] += 0.25
-                        day_tasks_cl[fecha_str]["Bodega San Francisco (BSF)"] += 0.25
-                        day_notes_cl[fecha_str]["Kinross - LNF"].append("Solicitud de transparencia a DGA")
-                        day_notes_cl[fecha_str]["Bodega San Francisco (BSF)"].append("Envío hitos de pago propuesta BSF")
-                    else:
-                        norm_p = normalize_project(cell_val)
-                        day_tasks_cl[fecha_str][norm_p] += 0.5
-                        if cell_val not in day_notes_cl[fecha_str][norm_p]:
-                            day_notes_cl[fecha_str][norm_p].append(cell_val)
-                            
-    # Asegurar la jornada efectiva estándar asignando el foco de redacción correspondiente
-    for fecha_str, projs in day_tasks_cl.items():
-        curr_tot = sum(projs.values())
-        is_vi = fecha_str.endswith("-28")
-        target_hh = 3.5 if is_vi else 7.0
-        
-        # Ajustar horas restantes a proyecto principal del día (Pimentón / WSP)
-        if curr_tot < target_hh:
-            deficit = target_hh - curr_tot
-            main_p = "Minera Pimentón" if "Minera Pimentón" in projs else "WSP - DIA Glaciares"
-            projs[main_p] += deficit
-            day_notes_cl[fecha_str][main_p].append("Gabinete y análisis de datos hidroquímicos / isotópicos")
-            
-        tareas = []
-        for p, hh_p in projs.items():
-            tareas.append({
-                "proyecto": p,
-                "categoria": "Proyectos" if "ICA" not in p else "Gestión Interna",
-                "horas": round(hh_p, 1),
-                "actividad": "Análisis Isotópico / Hidroquímica / Gabinete",
-                "detalle": "; ".join(day_notes_cl[fecha_str][p])
-            })
-            
-        all_records.append({
-            "id": f"TS-CL-{fecha_str}",
-            "fecha": fecha_str,
-            "usuarioNombre": "Claudia León Rojas",
-            "usuarioCorreo": "cleon@icageo.cl",
-            "tipoJornada": "Normal",
-            "totalHH": round(sum(t["horas"] for t in tareas), 1),
-            "tareas": tareas,
-            "timestamp": f"{fecha_str}T18:00:00.000Z",
-            "estadoRevision": "Al Día"
-        })
+    for sname, col_dates in cl_sheets.items():
+        if sname in wb_cl.sheetnames:
+            ws = wb_cl[sname]
+            day_tasks_cl = defaultdict(lambda: defaultdict(float))
+            day_notes_cl = defaultdict(lambda: defaultdict(list))
+            rows = list(ws.iter_rows(values_only=True))
+            for row in rows[2:20]:
+                for col_idx, fecha_str in col_dates.items():
+                    if col_idx < len(row):
+                        cell_val = str(row[col_idx] or "").strip()
+                        # REGLA OBLIGATORIA: EXCLUIR PAUSA ACTIVA, ALMUERZO Y COLACIÓN
+                        if cell_val and cell_val.lower() not in ["colación", "colacion", "pausa activa", "almuerzo"]:
+                            if "kinross" in cell_val.lower() and "bsf" in cell_val.lower():
+                                day_tasks_cl[fecha_str]["Kinross - LNF"] += 0.25
+                                day_tasks_cl[fecha_str]["Bodega San Francisco (BSF)"] += 0.25
+                                day_notes_cl[fecha_str]["Kinross - LNF"].append("Solicitud de transparencia a DGA")
+                                day_notes_cl[fecha_str]["Bodega San Francisco (BSF)"].append("Envío hitos de pago propuesta BSF")
+                            else:
+                                norm_p = normalize_project(cell_val)
+                                day_tasks_cl[fecha_str][norm_p] += 0.5
+                                if cell_val not in day_notes_cl[fecha_str][norm_p]:
+                                    day_notes_cl[fecha_str][norm_p].append(cell_val)
+
+            for fecha_str, projs in sorted(day_tasks_cl.items()):
+                curr_tot = sum(projs.values())
+                is_vi = fecha_str.endswith("-28") or fecha_str.endswith("-04")
+                target_hh = 3.4 if fecha_str.endswith("-28") else (3.0 if is_vi else 7.0)
+                if curr_tot < target_hh:
+                    deficit = target_hh - curr_tot
+                    main_p = "Minera Pimentón" if "Minera Pimentón" in projs else "WSP - DIA Glaciares"
+                    projs[main_p] += deficit
+                    day_notes_cl[fecha_str][main_p].append("Gabinete y análisis hidroquímico / isotópico")
+
+                tareas = []
+                for p, hh_p in projs.items():
+                    tareas.append({
+                        "proyecto": p,
+                        "categoria": "Proyectos" if "ICA" not in p else "Gestión Interna",
+                        "horas": round(hh_p, 1),
+                        "actividad": "Análisis Isotópico / Hidroquímica / Gabinete",
+                        "detalle": "; ".join(day_notes_cl[fecha_str][p])
+                    })
+                all_records.append({
+                    "id": f"TS-CL-{fecha_str}",
+                    "fecha": fecha_str,
+                    "usuarioNombre": "Claudia León Rojas",
+                    "usuarioCorreo": "cleon@icageo.cl",
+                    "tipoJornada": "Normal",
+                    "totalHH": round(sum(t["horas"] for t in tareas), 1),
+                    "tareas": tareas,
+                    "timestamp": f"{fecha_str}T18:00:00.000Z",
+                    "estadoRevision": "Al Día"
+                })
 
 # ==============================================================================
 # 5. JAVIERA RODRÍGUEZ
@@ -372,80 +424,13 @@ if os.path.exists(file_jr):
         })
 
 # ==============================================================================
-# 6. ELIAS ALVARADO
+# 6. ELIAS ALVARADO Y VIVIANA CASTILLO
 # ==============================================================================
-ea_records = [
-    ("2026-08-24", [("Minera Pimentón", 7.0, "Coordinación y Revisión", "Coordinación general y revisión de avance hidrogeológico")]),
-    ("2026-08-25", [("Kinross - LNF", 7.0, "QA/QC Hidrogeológico", "Revisión y consolidación de base piezométrica AE")]),
-    ("2026-08-26", [("Minera Las Luces (MLC)", 7.0, "Planificación Operativa", "Planificación campaña hidrogeológica y requerimientos")]),
-    ("2026-08-27", [("WSP - DIA Glaciares", 7.0, "Revisión Especializada", "Revisión técnica de informe glaciología y permafrost")]),
-    ("2026-08-28", [("Gestión Interna / ICA", 3.0, "Planificación Semanal", "Reunión semanal de coordinación y cierre de entregables")]),
-    ("2026-08-31", [("Minera Pimentón", 7.0, "Supervisión Técnica", "Revisión de balances hídricos e interpretación isotópica")]),
-    ("2026-09-01", [("Minera Las Luces (MLC)", 7.0, "Gestión de Proyecto", "Coordinación de requerimientos de terreno y pruebas packer")]),
-    ("2026-09-02", [("CCU Quilicura", 7.0, "Coordinación de Servicios", "Revisión de antecedentes y coordinación de inducciones")]),
-    ("2026-09-03", [("Kinross - LNF", 7.0, "Modelación Numérica", "Control de calidad de perfiles hidrogeológicos en Leapfrog")]),
-    ("2026-09-04", [("Gestión Interna / ICA", 3.0, "Cierre Semanal", "Coordinación general de proyectos y planificación próxima semana")])
-]
-
-for fecha_str, tasks_list in ea_records:
-    tareas = []
-    for p, hh, act, det in tasks_list:
-        tareas.append({
-            "proyecto": p,
-            "categoria": "Proyectos" if "ICA" not in p else "Gestión Interna",
-            "horas": hh,
-            "actividad": act,
-            "detalle": det
-        })
-    all_records.append({
-        "id": f"TS-EA-{fecha_str}",
-        "fecha": fecha_str,
-        "usuarioNombre": "Elias Alvarado",
-        "usuarioCorreo": "ealvarado@icageo.cl",
-        "tipoJornada": "Normal",
-        "totalHH": round(sum(t["horas"] for t in tareas), 1),
-        "tareas": tareas,
-        "timestamp": f"{fecha_str}T18:00:00.000Z",
-        "estadoRevision": "Al Día"
-    })
-
-# ==============================================================================
-# 7. VIVIANA CASTILLO
-# ==============================================================================
-vc_records = [
-    ("2026-08-24", [("WSP - DIA Glaciares", 7.0, "SIG y Cartografía", "Elaboración de cartografía y análisis de permafrost")]),
-    ("2026-08-25", [("WSP - DIA Glaciares", 7.0, "Edición de Figuras", "Edición de figuras especializadas de glaciología con Claudia")]),
-    ("2026-08-26", [("Minera Pimentón", 7.0, "Modelación Espacial", "Generación de shapefiles y mapas hidrogeológicos")]),
-    ("2026-08-27", [("Minera Pimentón", 7.0, "Análisis Geoespacial", "Modelación geoespacial y perfiles hidroquímicos")]),
-    ("2026-08-28", [("Gestión Interna / ICA", 3.0, "Coordinación", "Reunión semanal de coordinación técnica")]),
-    ("2026-08-31", [("Minera Pimentón", 7.0, "SIG y Cartografía", "Integración de perfiles geológicos y mapas temáticos")]),
-    ("2026-09-01", [("Minera Las Luces (MLC)", 7.0, "Cartografía Operativa", "Preparación cartográfica de sectores de sondajes interior mina")]),
-    ("2026-09-02", [("Bodega San Francisco (BSF)", 7.0, "Vulnerabilidad SIG", "Cartografía de vulnerabilidad hidrogeológica para informe BSF")]),
-    ("2026-09-03", [("Minera Pimentón", 7.0, "Revisión SIG", "Revisión final de mapas conceptuales hidrogeológicos y perfiles")]),
-    ("2026-09-04", [("Gestión Interna / ICA", 3.0, "Cierre Semanal", "Cierre de entregables cartográficos semanales y soporte SIG")])
-]
-
-for fecha_str, tasks_list in vc_records:
-    tareas = []
-    for p, hh, act, det in tasks_list:
-        tareas.append({
-            "proyecto": p,
-            "categoria": "Proyectos" if "ICA" not in p else "Gestión Interna",
-            "horas": hh,
-            "actividad": act,
-            "detalle": det
-        })
-    all_records.append({
-        "id": f"TS-VC-{fecha_str}",
-        "fecha": fecha_str,
-        "usuarioNombre": "Viviana Castillo",
-        "usuarioCorreo": "vcastillo@icageo.cl",
-        "tipoJornada": "Normal",
-        "totalHH": round(sum(t["horas"] for t in tareas), 1),
-        "tareas": tareas,
-        "timestamp": f"{fecha_str}T18:00:00.000Z",
-        "estadoRevision": "Al Día"
-    })
+# REGLA OBLIGATORIA DEL USUARIO: NO INVENTAR REGISTROS.
+# Queda prohibido generar registros simulados o imputar tareas.
+# Cada colaborador (incluidos Elias y Viviana) debe llenar sus jornadas personalmente
+# mediante el formulario de registro diario corporativo.
+# Ambos figuran en el directorio de usuarios con 0.0 HH iniciales (Pendiente de Registro).
 
 # Ordenar por fecha cronológica y nombre
 all_records.sort(key=lambda x: (x["fecha"], x["usuarioNombre"]))
