@@ -111,6 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Clave incorrecta. Por favor contacta al Administrador.');
       }
     });
+  }
+
   // 1.1 Configuración de Conexión M365 / Power Automate
   const btnM365Config = document.getElementById('btnM365Config');
   const modalM365Settings = document.getElementById('modalM365Settings');
@@ -182,6 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Error al contactar el endpoint: ' + err.message);
       });
     });
+  }
+
   // 1.2 Gestión de PINs y Propuestas (Admin: Elias Alvarado)
   const btnAdminManagePinsCatalog = document.getElementById('btnAdminManagePinsCatalog');
   const modalAdminCatalogAndPins = document.getElementById('modalAdminCatalogAndPins');
@@ -300,6 +304,15 @@ document.addEventListener('DOMContentLoaded', () => {
       modalAdminCatalogAndPins.classList.remove('open');
     });
   }
+
+  // Cerrar modales de admin al hacer clic fuera del recuadro
+  [modalAdminAuth, modalEditRecord, modalM365Settings, modalAdminCatalogAndPins].forEach(modal => {
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('open');
+      });
+    }
+  });
 
   // 2. Renderizado del Dashboard y Tablero Kanban
   function renderDashboard() {
@@ -436,6 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Renderizar Barras de Proyectos
     renderProjectBreakdown(projectHoursMap, totalTeamHours);
   }
+  window.renderDashboard = renderDashboard;
 
   // 3. Renderizar Gráfico de Proyectos
   function renderProjectBreakdown(projectHoursMap, totalHours) {

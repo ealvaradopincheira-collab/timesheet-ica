@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
       'Teck-Exploración',
       'Otros'
     ],
+    'Propuestas': ['Propuestas Generales (Evaluación / Licitación)'],
+    'Gestión Interna': ['Reunión Semanal / Coordinación', 'Capacitación / Soporte Interno', 'Administrativo']
+  };
+
   // Sistema de PIN de 4 Dígitos por Usuario
   function getUserPins() {
     const defaultPins = {
@@ -253,6 +257,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (modalNewProposal) modalNewProposal.classList.remove('open');
     });
   }
+
+  // Cerrar modales del formulario al hacer clic fuera del recuadro
+  [modalUserPinAuth, modalChangeUserPin, modalNewProposal].forEach(modal => {
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('open');
+      });
+    }
+  });
 
   if (formCreateProposal) {
     formCreateProposal.addEventListener('submit', (e) => {
