@@ -107,6 +107,77 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Clave incorrecta. Por favor contacta al Administrador.');
       }
     });
+  // 1.1 Configuración de Conexión M365 / Power Automate
+  const btnM365Config = document.getElementById('btnM365Config');
+  const modalM365Settings = document.getElementById('modalM365Settings');
+  const btnCloseM365Modal = document.getElementById('btnCloseM365Modal');
+  const inputPAEndpoint = document.getElementById('inputPAEndpoint');
+  const btnSaveM365Endpoint = document.getElementById('btnSaveM365Endpoint');
+  const btnTestM365Connection = document.getElementById('btnTestM365Connection');
+  const m365ConnectionStatus = document.getElementById('m365ConnectionStatus');
+
+  function updateM365StatusBadge() {
+    const ep = localStorage.getItem('ica_pa_endpoint');
+    if (m365ConnectionStatus) {
+      if (ep && ep.startsWith('http')) {
+        m365ConnectionStatus.style.color = '#10b981';
+        m365ConnectionStatus.innerHTML = `✓ Conectado a Power Automate (${ep.slice(0, 40)}...)`;
+      } else {
+        m365ConnectionStatus.style.color = '#f59e0b';
+        m365ConnectionStatus.innerHTML = `● Sin endpoint configurado (Guardando en caché local)`;
+      }
+    }
+  }
+
+  if (btnM365Config) {
+    btnM365Config.addEventListener('click', () => {
+      if (modalM365Settings) {
+        modalM365Settings.classList.add('open');
+        if (inputPAEndpoint) inputPAEndpoint.value = localStorage.getItem('ica_pa_endpoint') || '';
+        updateM365StatusBadge();
+      }
+    });
+  }
+
+  if (btnCloseM365Modal) {
+    btnCloseM365Modal.addEventListener('click', () => {
+      modalM365Settings.classList.remove('open');
+    });
+  }
+
+  if (btnSaveM365Endpoint) {
+    btnSaveM365Endpoint.addEventListener('click', () => {
+      const url = inputPAEndpoint.value.trim();
+      if (url && !url.startsWith('http')) {
+        alert('Por favor introduce una URL válida que empiece por https://');
+        return;
+      }
+      localStorage.setItem('ica_pa_endpoint', url);
+      updateM365StatusBadge();
+      modalM365Settings.classList.remove('open');
+      showToast('Configuración de Power Automate guardada con éxito.', 'success');
+    });
+  }
+
+  if (btnTestM365Connection) {
+    btnTestM365Connection.addEventListener('click', () => {
+      const url = inputPAEndpoint.value.trim();
+      if (!url) {
+        alert('Introduce una URL antes de probar la conexión.');
+        return;
+      }
+      showToast('Probando comunicación con webhook...', 'info');
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ test: true, admin: 'Elias Alvarado' }),
+        mode: 'no-cors'
+      }).then(() => {
+        showToast('✓ Solicitud de prueba enviada a Power Automate.', 'success');
+      }).catch(err => {
+        alert('Error al contactar el endpoint: ' + err.message);
+      });
+    });
   }
 
   // 2. Renderizado del Dashboard y Tablero Kanban

@@ -58,6 +58,9 @@
           <p>Meta Semanal: 31.0 HH efectivas (Lunes a Jueves: 7.0h | Viernes: 3.0h)</p>
         </div>
         <div class="topbar-filters">
+          <button type="button" class="btn btn-outline" id="btnM365Config" style="font-size: 0.82rem;">
+            ⚙️ Conexión M365
+          </button>
           <button type="button" class="btn btn-outline" id="btnExportExcel">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Exportar a Excel
@@ -395,7 +398,7 @@
             <label>Nota de Justificación de Auditoría</label>
             <textarea class="input-control" id="editRecordAuditNote" rows="2" placeholder="Describe el motivo de la corrección..."></textarea>
             <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">
-              * Esta edición quedará registrada y se emitirá notificación exclusiva a <strong>ealvarado@icageoconsultores.cl</strong>.
+              * Esta edición quedará registrada y se emitirá notificación exclusiva a <strong>ealvarado@icageo.cl</strong>.
             </span>
           </div>
         </div>
@@ -403,6 +406,38 @@
           <button type="submit" class="btn btn-primary">Guardar Modificación</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 3: CONFIGURACIÓN CONEXIÓN M365 (POWER AUTOMATE)
+       ======================================================== -->
+  <div class="modal-overlay" id="modalM365Settings">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3>⚙️ Conexión M365 / Power Automate (Vía B.1)</h3>
+        <button type="button" class="modal-close" id="btnCloseM365Modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Conecta este formulario en línea directamente a tu archivo <strong>Timesheet_Maestro_ICA_Estandarizado.xlsx</strong> en SharePoint mediante un webhook de Power Automate.
+        </p>
+        <div class="input-group" style="margin-bottom: 1rem;">
+          <label>URL de HTTP POST de Power Automate</label>
+          <input type="url" class="input-control" id="inputPAEndpoint" placeholder="https://prod-XX.westus.logic.azure.com:443/workflows/..." style="font-size: 0.82rem;">
+          <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">
+            * Sigue la guía <code>GUIA_POWER_AUTOMATE_B1.md</code> en tu repositorio para obtener esta URL en 5 minutos.
+          </span>
+        </div>
+        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; font-size: 0.78rem; color: #334155;">
+          <strong>Estado de Sincronización:</strong>
+          <p id="m365ConnectionStatus" style="margin-top: 0.2rem; font-weight: 600; color: #f59e0b;">● Sin endpoint configurado (Guardando en caché local)</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="btnTestM365Connection">Probar Conexión</button>
+        <button type="button" class="btn btn-primary" id="btnSaveM365Endpoint">Guardar Configuración</button>
+      </div>
     </div>
   </div>
 

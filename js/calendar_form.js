@@ -305,24 +305,73 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!conf) return;
       }
 
-      // Guardar en Almacenamiento Local (Simulación SharePoint / M365)
-      const payload = {
-        id: 'TS-' + Date.now(),
+      // Formatear payload oficial para SharePoint / Power Automate (TablaTimesheetICA)
+      const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      const dateParts = dateVal.split('-').map(Number);
+      const dayIndex = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]).getDay();
+      const diaSemana = dayNames[dayIndex] || 'Lunes';
+
+      const userInitials = userName.split(' ').map(n => n[0]).join('').slice(0, 3).toUpperCase();
+      const timeStamp = Date.now().toString().slice(-4);
+
+      // Tareas formateadas exactamente para TablaTimesheetICA
+      const paTasks = taskItems.map((t, idx) => ({
+        ID_Registro: `TS-${dateVal.replace(/-/g, '')}-${userInitials}-${idx + 1}`,
+        Proyecto: t.proyecto,
+        Codigo_OT: 'OT-AUTO',
+        Horas_HH: t.horas,
+        Actividad_Descripcion: t.detalle ? `${t.actividad}: ${t.detalle}` : t.actividad,
+        Estado_Aprobacion: isTerrain ? 'En Terreno' : (sumHours >= target ? 'Al Día' : 'Pendiente'),
+        Origen_Registro: 'Web App Calendar (GitHub Pages)'
+      }));
+
+      const paPayload = {
+        Fecha_Labor: dateVal,
+        Fecha_Semana: dateVal,
+        Dia_Semana: diaSemana,
+        Consultor: userName,
+        Correo_Corporativo: userEmail,
+        Tipo_Jornada: isTerrain ? 'Terreno_Extendido' : (sumHours === target ? 'Oficina_Efectiva' : 'Parcial'),
+        Total_HH: sumHours,
+        tareas: paTasks
+      };
+
+      // Guardar en Almacenamiento Local (para visualización inmediata en el Dashboard)
+      const localPayload = {
+        id: `TS-${dateVal.replace(/-/g, '')}-${userInitials}`,
         fecha: dateVal,
         usuarioCorreo: userEmail,
         usuarioNombre: userName,
-        tipoJornada: isTerrain ? 'Terreno_Extendido' : (sumHours === target ? 'Oficina_Efectiva' : 'Parcial'),
+        tipoJornada: paPayload.Tipo_Jornada,
         totalHH: sumHours,
         tareas: taskItems,
         estadoRevision: isTerrain ? 'En Terreno' : (sumHours >= target ? 'Al Día' : 'Pendiente'),
         fechaEnvio: new Date().toISOString()
       };
 
-      saveDailyRecord(payload);
-      showToast(`¡Jornada de ${userName} del ${dateVal} (${sumHours} HH) guardada con éxito!`, 'success');
+      saveDailyRecord(localPayload);
+
+      // Envío a Power Automate si está configurado el Endpoint
+      const paEndpoint = localStorage.getItem('ica_pa_endpoint');
+      if (paEndpoint && paEndpoint.startsWith('http')) {
+        showToast('Enviando y sincronizando con SharePoint de ICA...', 'info');
+        fetch(paEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(paPayload),
+          mode: 'no-cors'
+        }).then(() => {
+          showToast(`✓ ¡Jornada de ${userName} sincronizada exitosamente en SharePoint!`, 'success');
+        }).catch(err => {
+          console.warn('Error al contactar Power Automate:', err);
+          showToast(`Guardado localmente. Revisa la conexión de Power Automate.`, 'warning');
+        });
+      } else {
+        showToast(`✓ Jornada de ${userName} (${sumHours} HH) guardada. (Configura el Endpoint en Acceso RRHH para envío automático a SharePoint).`, 'success');
+      }
 
       // Notificar al Dashboard si está abierto
-      window.dispatchEvent(new CustomEvent('timesheet_record_saved', { detail: payload }));
+      window.dispatchEvent(new CustomEvent('timesheet_record_saved', { detail: localPayload }));
     });
   }
 
@@ -338,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateTargetBanner();
   if (tasksContainer && tasksContainer.children.length === 0) {
     createTaskRow('Proyectos', 'Kinross', 3.5, 'Redacción EETT / Informe', 'Metodología y resultados de modelo');
-    createTaskRow('Proyectos', 'HMC', 3.5, 'Modelación / Análisis Numérico', 'Revisión balance hídrico');
+    createTaskRow('Proyectos', 'HMC - Tambo de Oro', 3.5, 'Modelación / Análisis Numérico', 'Revisión balance hídrico');
   }
 });
 
