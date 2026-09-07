@@ -199,9 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const teamMembersList = [
       { name: 'Claudia León Rojas', email: 'cleon@icageo.cl' },
       { name: 'Cristóbal Bravo', email: 'cbravo@icageo.cl' },
+      { name: 'Elias Alvarado', email: 'ealvarado@icageo.cl' },
       { name: 'Gonzalo Maragaño Carmona', email: 'gmaragano@icageo.cl' },
       { name: 'Gonzalo Suárez', email: 'gsuarez@icageo.cl' },
-      { name: 'Javiera Rodríguez', email: 'jrodriguez@icageo.cl' }
+      { name: 'Javiera Rodríguez', email: 'jrodriguez@icageo.cl' },
+      { name: 'Viviana Castillo', email: 'vcastillo@icageo.cl' }
     ];
 
     if (tablePinsAdminBody) {
@@ -396,13 +398,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const kpiHoursSub = document.querySelector('#kpiTotalHours + .kpi-subtext');
     if (kpiHoursSub) kpiHoursSub.textContent = periodSubtextStr;
 
-    // Lista de Colaboradores Oficiales
+    // Lista de Colaboradores Oficiales (7 integrantes)
     const teamMembers = [
       { name: 'Claudia León Rojas', email: 'cleon@icageo.cl', initials: 'CL' },
       { name: 'Cristóbal Bravo', email: 'cbravo@icageo.cl', initials: 'CB' },
+      { name: 'Elias Alvarado', email: 'ealvarado@icageo.cl', initials: 'EA' },
       { name: 'Gonzalo Maragaño Carmona', email: 'gmaragano@icageo.cl', initials: 'GM' },
       { name: 'Gonzalo Suárez', email: 'gsuarez@icageo.cl', initials: 'GS' },
-      { name: 'Javiera Rodríguez', email: 'jrodriguez@icageo.cl', initials: 'JR' }
+      { name: 'Javiera Rodríguez', email: 'jrodriguez@icageo.cl', initials: 'JR' },
+      { name: 'Viviana Castillo', email: 'vcastillo@icageo.cl', initials: 'VC' }
     ];
 
     // Limpiar Columnas
@@ -680,12 +684,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. Carga Inicial de Datos Reales Consolidados del Equipo
+  // 6. Carga Inicial de Datos Reales Consolidados del Equipo (7 Integrantes)
   function initSeedData() {
-    const isV3 = localStorage.getItem('ica_timesheet_v3_imported');
-    if (!isV3 && window.ICA_REAL_TEAM_DATA && window.ICA_REAL_TEAM_DATA.length > 0) {
+    const isV4 = localStorage.getItem('ica_timesheet_v4_imported');
+    if (!isV4 && window.ICA_REAL_TEAM_DATA && window.ICA_REAL_TEAM_DATA.length > 0) {
       localStorage.setItem('ica_timesheet_data', JSON.stringify(window.ICA_REAL_TEAM_DATA));
-      localStorage.setItem('ica_timesheet_v3_imported', 'true');
+      localStorage.setItem('ica_timesheet_v4_imported', 'true');
     }
   }
 });

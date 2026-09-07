@@ -18,42 +18,53 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Mapeo de Correos Institucionales Oficiales (@icageo.cl)
   const userDirectory = {
-    'cbravo@icageo.cl': 'Cristóbal Bravo',
     'cleon@icageo.cl': 'Claudia León Rojas',
+    'cbravo@icageo.cl': 'Cristóbal Bravo',
+    'ealvarado@icageo.cl': 'Elias Alvarado',
     'gmaragano@icageo.cl': 'Gonzalo Maragaño Carmona',
     'gsuarez@icageo.cl': 'Gonzalo Suárez',
-    'jrodriguez@icageo.cl': 'Javiera Rodríguez'
+    'jrodriguez@icageo.cl': 'Javiera Rodríguez',
+    'vcastillo@icageo.cl': 'Viviana Castillo'
   };
 
   // Catálogo Oficial de Proyectos con Códigos/OT de ICA
   const projectCatalog = {
     'Proyectos': [
-      'Kinross',
+      'Minera Pimentón',
+      'Kinross - LNF',
+      'WSP - DIA Glaciares',
+      'Minera Las Luces (MLC)',
+      'Bodega San Francisco (BSF)',
+      'CCU Quilicura',
       'HMC - Tambo de Oro',
-      'HMC - Sagasca',
       'BHP Experto',
-      'BHP PAT',
-      'BHP-Cerro Colorado',
-      'B-Ambiental',
-      'MyMA',
-      'INOGEN',
       'AMSA - Pelambre',
       'Collahuasi',
-      'Teck-Exploración',
       'Otros'
     ],
-    'Propuestas': ['Propuestas Generales (Evaluación / Licitación)'],
-    'Gestión Interna': ['Reunión Semanal / Coordinación', 'Capacitación / Soporte Interno', 'Administrativo']
+    'Propuestas': [
+      'Propuestas Generales (Evaluación / Licitación)',
+      'Propuesta EFE',
+      'Propuesta ECConsulting'
+    ],
+    'Gestión Interna': [
+      'Reunión Semanal / Coordinación',
+      'Exámenes Ocupacionales ASCH',
+      'Capacitación / Soporte Interno',
+      'Administrativo / EPP'
+    ]
   };
 
   // Sistema de PIN de 4 Dígitos por Usuario
   function getUserPins() {
     const defaultPins = {
-      'cbravo@icageo.cl': '1234',
       'cleon@icageo.cl': '1234',
+      'cbravo@icageo.cl': '1234',
+      'ealvarado@icageo.cl': '1234',
       'gmaragano@icageo.cl': '1234',
       'gsuarez@icageo.cl': '1234',
-      'jrodriguez@icageo.cl': '1234'
+      'jrodriguez@icageo.cl': '1234',
+      'vcastillo@icageo.cl': '1234'
     };
     const stored = localStorage.getItem('ica_user_pins');
     if (!stored) {
@@ -113,11 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputProposalClient = document.getElementById('inputProposalClient');
   const inputProposalNotes = document.getElementById('inputProposalNotes');
 
+  const activeUserNameDisplay = document.getElementById('activeUserNameDisplay');
+  const btnLockSession = document.getElementById('btnLockSession');
+  const modalPinUserSelect = document.getElementById('modalPinUserSelect');
+
   function checkUserPinState() {
     const currentEmail = userSelect ? userSelect.value : '';
     const currentName = userDirectory[currentEmail] || 'Colaborador';
 
-    if (authenticatedUserEmail === currentEmail) {
+    if (authenticatedUserEmail === currentEmail && currentEmail) {
       // Usuario autenticado
       if (formDaily) formDaily.classList.remove('form-content-locked');
       if (pinStatusText) {
@@ -126,27 +141,50 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (btnOpenPinModal) btnOpenPinModal.style.display = 'none';
       if (btnChangePinModal) btnChangePinModal.style.display = 'inline-block';
+      if (btnLockSession) btnLockSession.style.display = 'inline-block';
     } else {
       // Bloqueado
       if (formDaily) formDaily.classList.add('form-content-locked');
       if (pinStatusText) {
         pinStatusText.className = 'pin-status-text locked';
-        pinStatusText.innerHTML = `🔒 <strong>Sesión Bloqueada:</strong> Ingresa el PIN de 4 números de ${currentName}`;
+        pinStatusText.innerHTML = `🔒 <strong>Sesión Bloqueada:</strong> Selecciona tu nombre e ingresa tu PIN (${currentName})`;
       }
       if (btnOpenPinModal) {
         btnOpenPinModal.style.display = 'inline-block';
         btnOpenPinModal.innerHTML = `🔑 Desbloquear (${currentName.split(' ')[0]})`;
       }
       if (btnChangePinModal) btnChangePinModal.style.display = 'none';
+      if (btnLockSession) btnLockSession.style.display = 'none';
     }
   }
 
-  if (userSelect && userEmailInput) {
+  if (userSelect) {
     userSelect.addEventListener('change', () => {
-      userEmailInput.value = userSelect.value;
+      if (userEmailInput) userEmailInput.value = userSelect.value;
+      if (activeUserNameDisplay) activeUserNameDisplay.value = userDirectory[userSelect.value] || 'Colaborador';
+      if (modalPinUserSelect) modalPinUserSelect.value = userSelect.value;
       authenticatedUserEmail = null; // Requiere re-validar PIN al cambiar de usuario
       checkUserPinState();
       recalculateDayProgress();
+    });
+  }
+
+  if (modalPinUserSelect) {
+    modalPinUserSelect.addEventListener('change', () => {
+      if (userSelect) userSelect.value = modalPinUserSelect.value;
+      if (userEmailInput) userEmailInput.value = modalPinUserSelect.value;
+      if (activeUserNameDisplay) activeUserNameDisplay.value = userDirectory[modalPinUserSelect.value] || 'Colaborador';
+      if (pinModalUserName) pinModalUserName.textContent = userDirectory[modalPinUserSelect.value] || 'Colaborador';
+      authenticatedUserEmail = null;
+      checkUserPinState();
+    });
+  }
+
+  if (btnLockSession) {
+    btnLockSession.addEventListener('click', () => {
+      authenticatedUserEmail = null;
+      checkUserPinState();
+      showToast('Sesión bloqueada correctamente.', 'info');
     });
   }
 
@@ -155,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnOpenPinModal.addEventListener('click', () => {
       const currentEmail = userSelect ? userSelect.value : '';
       const currentName = userDirectory[currentEmail] || 'Colaborador';
+      if (modalPinUserSelect) modalPinUserSelect.value = currentEmail;
       if (pinModalUserName) pinModalUserName.textContent = currentName;
       if (inputUserPin) inputUserPin.value = '';
       if (modalUserPinAuth) modalUserPinAuth.classList.add('open');

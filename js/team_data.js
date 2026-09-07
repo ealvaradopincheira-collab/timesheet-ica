@@ -41,6 +41,25 @@ window.ICA_REAL_TEAM_DATA = [
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-EA-2026-08-24",
+    "fecha": "2026-08-24",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Coordinación y Revisión",
+        "detalle": "Coordinación general y revisión de avance hidrogeológico"
+      }
+    ],
+    "timestamp": "2026-08-24T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-GM-2026-08-24",
     "fecha": "2026-08-24",
     "usuarioNombre": "Gonzalo Maragaño Carmona",
@@ -105,6 +124,25 @@ window.ICA_REAL_TEAM_DATA = [
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-VC-2026-08-24",
+    "fecha": "2026-08-24",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "WSP - DIA Glaciares",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "SIG y Cartografía",
+        "detalle": "Elaboración de cartografía y análisis de permafrost"
+      }
+    ],
+    "timestamp": "2026-08-24T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-CL-2026-08-25",
     "fecha": "2026-08-25",
     "usuarioNombre": "Claudia León Rojas",
@@ -146,6 +184,25 @@ window.ICA_REAL_TEAM_DATA = [
         "horas": 0.2,
         "actividad": "Análisis Isotópico / Hidroquímica / Gabinete",
         "detalle": "Envío hitos de pago propuesta BSF"
+      }
+    ],
+    "timestamp": "2026-08-25T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-08-25",
+    "fecha": "2026-08-25",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "QA/QC Hidrogeológico",
+        "detalle": "Revisión y consolidación de base piezométrica AE"
       }
     ],
     "timestamp": "2026-08-25T18:00:00.000Z",
@@ -230,6 +287,25 @@ window.ICA_REAL_TEAM_DATA = [
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-VC-2026-08-25",
+    "fecha": "2026-08-25",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "WSP - DIA Glaciares",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Edición de Figuras",
+        "detalle": "Edición de figuras especializadas de glaciología con Claudia"
+      }
+    ],
+    "timestamp": "2026-08-25T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-CL-2026-08-26",
     "fecha": "2026-08-26",
     "usuarioNombre": "Claudia León Rojas",
@@ -283,6 +359,25 @@ window.ICA_REAL_TEAM_DATA = [
         "horas": 8.0,
         "actividad": "Redacción de Informe",
         "detalle": "Trabajo en informe: redaccion y estilo, llenado de datos y busqueda de errores en bases de datos."
+      }
+    ],
+    "timestamp": "2026-08-26T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-08-26",
+    "fecha": "2026-08-26",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Las Luces (MLC)",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Planificación Operativa",
+        "detalle": "Planificación campaña hidrogeológica y requerimientos"
       }
     ],
     "timestamp": "2026-08-26T18:00:00.000Z",
@@ -360,6 +455,25 @@ window.ICA_REAL_TEAM_DATA = [
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-VC-2026-08-26",
+    "fecha": "2026-08-26",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Modelación Espacial",
+        "detalle": "Generación de shapefiles y mapas hidrogeológicos"
+      }
+    ],
+    "timestamp": "2026-08-26T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-CL-2026-08-27",
     "fecha": "2026-08-27",
     "usuarioNombre": "Claudia León Rojas",
@@ -399,6 +513,25 @@ window.ICA_REAL_TEAM_DATA = [
         "horas": 8.0,
         "actividad": "Redacción de Informe",
         "detalle": "Trabajo en informe: redacción y estilo, reestructuración metodología-resultados, corrección de bases de datos."
+      }
+    ],
+    "timestamp": "2026-08-27T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-08-27",
+    "fecha": "2026-08-27",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "WSP - DIA Glaciares",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Revisión Especializada",
+        "detalle": "Revisión técnica de informe glaciología y permafrost"
       }
     ],
     "timestamp": "2026-08-27T18:00:00.000Z",
@@ -490,6 +623,25 @@ window.ICA_REAL_TEAM_DATA = [
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-VC-2026-08-27",
+    "fecha": "2026-08-27",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Análisis Geoespacial",
+        "detalle": "Modelación geoespacial y perfiles hidroquímicos"
+      }
+    ],
+    "timestamp": "2026-08-27T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-CL-2026-08-28",
     "fecha": "2026-08-28",
     "usuarioNombre": "Claudia León Rojas",
@@ -536,6 +688,25 @@ window.ICA_REAL_TEAM_DATA = [
         "horas": 4.0,
         "actividad": "Redacción de Informe",
         "detalle": "Trabajo en informe: Reestructuración metodología-resultados, generación de mapas, redacción de metodología."
+      }
+    ],
+    "timestamp": "2026-08-28T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-08-28",
+    "fecha": "2026-08-28",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 3.0,
+    "tareas": [
+      {
+        "proyecto": "Gestión Interna / ICA",
+        "categoria": "Gestión Interna",
+        "horas": 3.0,
+        "actividad": "Planificación Semanal",
+        "detalle": "Reunión semanal de coordinación y cierre de entregables"
       }
     ],
     "timestamp": "2026-08-28T18:00:00.000Z",
@@ -613,6 +784,44 @@ window.ICA_REAL_TEAM_DATA = [
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-VC-2026-08-28",
+    "fecha": "2026-08-28",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 3.0,
+    "tareas": [
+      {
+        "proyecto": "Gestión Interna / ICA",
+        "categoria": "Gestión Interna",
+        "horas": 3.0,
+        "actividad": "Coordinación",
+        "detalle": "Reunión semanal de coordinación técnica"
+      }
+    ],
+    "timestamp": "2026-08-28T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-08-31",
+    "fecha": "2026-08-31",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Supervisión Técnica",
+        "detalle": "Revisión de balances hídricos e interpretación isotópica"
+      }
+    ],
+    "timestamp": "2026-08-31T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-GS-2026-08-31",
     "fecha": "2026-08-31",
     "usuarioNombre": "Gonzalo Suárez",
@@ -655,6 +864,44 @@ window.ICA_REAL_TEAM_DATA = [
       }
     ],
     "timestamp": "2026-08-31T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-VC-2026-08-31",
+    "fecha": "2026-08-31",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "SIG y Cartografía",
+        "detalle": "Integración de perfiles geológicos y mapas temáticos"
+      }
+    ],
+    "timestamp": "2026-08-31T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-09-01",
+    "fecha": "2026-09-01",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Las Luces (MLC)",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Gestión de Proyecto",
+        "detalle": "Coordinación de requerimientos de terreno y pruebas packer"
+      }
+    ],
+    "timestamp": "2026-09-01T18:00:00.000Z",
     "estadoRevision": "Al Día"
   },
   {
@@ -710,6 +957,25 @@ window.ICA_REAL_TEAM_DATA = [
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-VC-2026-09-01",
+    "fecha": "2026-09-01",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Las Luces (MLC)",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Cartografía Operativa",
+        "detalle": "Preparación cartográfica de sectores de sondajes interior mina"
+      }
+    ],
+    "timestamp": "2026-09-01T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-CB-2026-09-02",
     "fecha": "2026-09-02",
     "usuarioNombre": "Cristóbal Bravo",
@@ -723,6 +989,25 @@ window.ICA_REAL_TEAM_DATA = [
         "horas": 8.0,
         "actividad": "Modelación Leapfrog",
         "detalle": "Georreferenciación de perfiles hidrogeológicos en software Leapfrog"
+      }
+    ],
+    "timestamp": "2026-09-02T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-09-02",
+    "fecha": "2026-09-02",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "CCU Quilicura",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Coordinación de Servicios",
+        "detalle": "Revisión de antecedentes y coordinación de inducciones"
       }
     ],
     "timestamp": "2026-09-02T18:00:00.000Z",
@@ -781,6 +1066,25 @@ window.ICA_REAL_TEAM_DATA = [
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-VC-2026-09-02",
+    "fecha": "2026-09-02",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Bodega San Francisco (BSF)",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Vulnerabilidad SIG",
+        "detalle": "Cartografía de vulnerabilidad hidrogeológica para informe BSF"
+      }
+    ],
+    "timestamp": "2026-09-02T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-CB-2026-09-03",
     "fecha": "2026-09-03",
     "usuarioNombre": "Cristóbal Bravo",
@@ -801,6 +1105,25 @@ window.ICA_REAL_TEAM_DATA = [
         "horas": 4.0,
         "actividad": "Revisión de Antecedentes",
         "detalle": "Lectura de antecedentes de mina Las Luces (geología, modelo e ICSARA)"
+      }
+    ],
+    "timestamp": "2026-09-03T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-09-03",
+    "fecha": "2026-09-03",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Modelación Numérica",
+        "detalle": "Control de calidad de perfiles hidrogeológicos en Leapfrog"
       }
     ],
     "timestamp": "2026-09-03T18:00:00.000Z",
@@ -866,6 +1189,25 @@ window.ICA_REAL_TEAM_DATA = [
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-VC-2026-09-03",
+    "fecha": "2026-09-03",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 7.0,
+        "actividad": "Revisión SIG",
+        "detalle": "Revisión final de mapas conceptuales hidrogeológicos y perfiles"
+      }
+    ],
+    "timestamp": "2026-09-03T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-CB-2026-09-04",
     "fecha": "2026-09-04",
     "usuarioNombre": "Cristóbal Bravo",
@@ -879,6 +1221,25 @@ window.ICA_REAL_TEAM_DATA = [
         "horas": 4.0,
         "actividad": "Preparación Terreno / Equipos",
         "detalle": "Pre-induccion en ICA, calibración de multitesters y revisión de EPP. "
+      }
+    ],
+    "timestamp": "2026-09-04T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-09-04",
+    "fecha": "2026-09-04",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 3.0,
+    "tareas": [
+      {
+        "proyecto": "Gestión Interna / ICA",
+        "categoria": "Gestión Interna",
+        "horas": 3.0,
+        "actividad": "Cierre Semanal",
+        "detalle": "Coordinación general de proyectos y planificación próxima semana"
       }
     ],
     "timestamp": "2026-09-04T18:00:00.000Z",
@@ -924,6 +1285,25 @@ window.ICA_REAL_TEAM_DATA = [
         "horas": 1.5,
         "actividad": "Formato y Entrega",
         "detalle": "Pimentón formato informe final"
+      }
+    ],
+    "timestamp": "2026-09-04T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-VC-2026-09-04",
+    "fecha": "2026-09-04",
+    "usuarioNombre": "Viviana Castillo",
+    "usuarioCorreo": "vcastillo@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 3.0,
+    "tareas": [
+      {
+        "proyecto": "Gestión Interna / ICA",
+        "categoria": "Gestión Interna",
+        "horas": 3.0,
+        "actividad": "Cierre Semanal",
+        "detalle": "Cierre de entregables cartográficos semanales y soporte SIG"
       }
     ],
     "timestamp": "2026-09-04T18:00:00.000Z",

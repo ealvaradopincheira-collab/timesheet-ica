@@ -371,6 +371,82 @@ if os.path.exists(file_jr):
             "estadoRevision": "Al Día"
         })
 
+# ==============================================================================
+# 6. ELIAS ALVARADO
+# ==============================================================================
+ea_records = [
+    ("2026-08-24", [("Minera Pimentón", 7.0, "Coordinación y Revisión", "Coordinación general y revisión de avance hidrogeológico")]),
+    ("2026-08-25", [("Kinross - LNF", 7.0, "QA/QC Hidrogeológico", "Revisión y consolidación de base piezométrica AE")]),
+    ("2026-08-26", [("Minera Las Luces (MLC)", 7.0, "Planificación Operativa", "Planificación campaña hidrogeológica y requerimientos")]),
+    ("2026-08-27", [("WSP - DIA Glaciares", 7.0, "Revisión Especializada", "Revisión técnica de informe glaciología y permafrost")]),
+    ("2026-08-28", [("Gestión Interna / ICA", 3.0, "Planificación Semanal", "Reunión semanal de coordinación y cierre de entregables")]),
+    ("2026-08-31", [("Minera Pimentón", 7.0, "Supervisión Técnica", "Revisión de balances hídricos e interpretación isotópica")]),
+    ("2026-09-01", [("Minera Las Luces (MLC)", 7.0, "Gestión de Proyecto", "Coordinación de requerimientos de terreno y pruebas packer")]),
+    ("2026-09-02", [("CCU Quilicura", 7.0, "Coordinación de Servicios", "Revisión de antecedentes y coordinación de inducciones")]),
+    ("2026-09-03", [("Kinross - LNF", 7.0, "Modelación Numérica", "Control de calidad de perfiles hidrogeológicos en Leapfrog")]),
+    ("2026-09-04", [("Gestión Interna / ICA", 3.0, "Cierre Semanal", "Coordinación general de proyectos y planificación próxima semana")])
+]
+
+for fecha_str, tasks_list in ea_records:
+    tareas = []
+    for p, hh, act, det in tasks_list:
+        tareas.append({
+            "proyecto": p,
+            "categoria": "Proyectos" if "ICA" not in p else "Gestión Interna",
+            "horas": hh,
+            "actividad": act,
+            "detalle": det
+        })
+    all_records.append({
+        "id": f"TS-EA-{fecha_str}",
+        "fecha": fecha_str,
+        "usuarioNombre": "Elias Alvarado",
+        "usuarioCorreo": "ealvarado@icageo.cl",
+        "tipoJornada": "Normal",
+        "totalHH": round(sum(t["horas"] for t in tareas), 1),
+        "tareas": tareas,
+        "timestamp": f"{fecha_str}T18:00:00.000Z",
+        "estadoRevision": "Al Día"
+    })
+
+# ==============================================================================
+# 7. VIVIANA CASTILLO
+# ==============================================================================
+vc_records = [
+    ("2026-08-24", [("WSP - DIA Glaciares", 7.0, "SIG y Cartografía", "Elaboración de cartografía y análisis de permafrost")]),
+    ("2026-08-25", [("WSP - DIA Glaciares", 7.0, "Edición de Figuras", "Edición de figuras especializadas de glaciología con Claudia")]),
+    ("2026-08-26", [("Minera Pimentón", 7.0, "Modelación Espacial", "Generación de shapefiles y mapas hidrogeológicos")]),
+    ("2026-08-27", [("Minera Pimentón", 7.0, "Análisis Geoespacial", "Modelación geoespacial y perfiles hidroquímicos")]),
+    ("2026-08-28", [("Gestión Interna / ICA", 3.0, "Coordinación", "Reunión semanal de coordinación técnica")]),
+    ("2026-08-31", [("Minera Pimentón", 7.0, "SIG y Cartografía", "Integración de perfiles geológicos y mapas temáticos")]),
+    ("2026-09-01", [("Minera Las Luces (MLC)", 7.0, "Cartografía Operativa", "Preparación cartográfica de sectores de sondajes interior mina")]),
+    ("2026-09-02", [("Bodega San Francisco (BSF)", 7.0, "Vulnerabilidad SIG", "Cartografía de vulnerabilidad hidrogeológica para informe BSF")]),
+    ("2026-09-03", [("Minera Pimentón", 7.0, "Revisión SIG", "Revisión final de mapas conceptuales hidrogeológicos y perfiles")]),
+    ("2026-09-04", [("Gestión Interna / ICA", 3.0, "Cierre Semanal", "Cierre de entregables cartográficos semanales y soporte SIG")])
+]
+
+for fecha_str, tasks_list in vc_records:
+    tareas = []
+    for p, hh, act, det in tasks_list:
+        tareas.append({
+            "proyecto": p,
+            "categoria": "Proyectos" if "ICA" not in p else "Gestión Interna",
+            "horas": hh,
+            "actividad": act,
+            "detalle": det
+        })
+    all_records.append({
+        "id": f"TS-VC-{fecha_str}",
+        "fecha": fecha_str,
+        "usuarioNombre": "Viviana Castillo",
+        "usuarioCorreo": "vcastillo@icageo.cl",
+        "tipoJornada": "Normal",
+        "totalHH": round(sum(t["horas"] for t in tareas), 1),
+        "tareas": tareas,
+        "timestamp": f"{fecha_str}T18:00:00.000Z",
+        "estadoRevision": "Al Día"
+    })
+
 # Ordenar por fecha cronológica y nombre
 all_records.sort(key=lambda x: (x["fecha"], x["usuarioNombre"]))
 
