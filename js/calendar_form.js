@@ -42,19 +42,36 @@ document.addEventListener('DOMContentLoaded', () => {
       'Teck-Exploración',
       'Otros'
     ],
-    'Propuestas': ['Propuestas Generales (Evaluación / Licitación)'],
-    'Gestión Interna': ['Reunión Semanal / Coordinación', 'Capacitación / Soporte Interno', 'Administrativo']
-  };
+  // Sistema de PIN de 4 Dígitos por Usuario
+  function getUserPins() {
+    const defaultPins = {
+      'cbravo@icageo.cl': '1234',
+      'cleon@icageo.cl': '1234',
+      'gmaragano@icageo.cl': '1234',
+      'gsuarez@icageo.cl': '1234',
+      'jrodriguez@icageo.cl': '1234'
+    };
+    const stored = localStorage.getItem('ica_user_pins');
+    if (!stored) {
+      localStorage.setItem('ica_user_pins', JSON.stringify(defaultPins));
+      return defaultPins;
+    }
+    return JSON.parse(stored);
+  }
 
-  const activityTypes = [
-    'Modelación / Análisis Numérico',
-    'Hidroquímica / Isótopos',
-    'Redacción EETT / Informe',
-    'SIG / Cartografía',
-    'Terreno / Piezometría',
-    'Reunión Técnica con Cliente',
-    'Reunión Interna / Planificación'
-  ];
+  let authenticatedUserEmail = null;
+
+  // Cargar Propuestas Personalizadas creadas por colaboradores
+  function loadCustomProposals() {
+    const custom = JSON.parse(localStorage.getItem('ica_custom_proposals') || '[]');
+    custom.forEach(p => {
+      const label = `[Propuesta] ${p.nombre} (${p.cliente})`;
+      if (!projectCatalog['Propuestas'].includes(label)) {
+        projectCatalog['Propuestas'].push(label);
+      }
+    });
+  }
+  loadCustomProposals();
 
   // 1. Inicialización de Fecha Actual
   const today = new Date();
@@ -65,13 +82,217 @@ document.addEventListener('DOMContentLoaded', () => {
     dateInput.value = `${yyyy}-${mm}-${dd}`;
   }
 
-  // 2. Sincronizar Usuario y Correo Institucional
+  // 2. Sincronizar Usuario, Correo Institucional y Bloqueo por PIN
+  const pinStatusText = document.getElementById('pinStatusText');
+  const btnOpenPinModal = document.getElementById('btnOpenPinModal');
+  const btnChangePinModal = document.getElementById('btnChangePinModal');
+  const modalUserPinAuth = document.getElementById('modalUserPinAuth');
+  const inputUserPin = document.getElementById('inputUserPin');
+  const btnSubmitUserPin = document.getElementById('btnSubmitUserPin');
+  const btnClosePinModal = document.getElementById('btnClosePinModal');
+  const pinModalUserName = document.getElementById('pinModalUserName');
+
+  // Modal Cambiar PIN
+  const modalChangeUserPin = document.getElementById('modalChangeUserPin');
+  const btnCloseChangePinModal = document.getElementById('btnCloseChangePinModal');
+  const formChangeUserPin = document.getElementById('formChangeUserPin');
+  const inputCurrentPin = document.getElementById('inputCurrentPin');
+  const inputNewPin = document.getElementById('inputNewPin');
+  const inputConfirmPin = document.getElementById('inputConfirmPin');
+
+  // Modal Nueva Propuesta
+  const btnOpenNewProposal = document.getElementById('btnOpenNewProposal');
+  const modalNewProposal = document.getElementById('modalNewProposal');
+  const btnCloseNewProposalModal = document.getElementById('btnCloseNewProposalModal');
+  const formCreateProposal = document.getElementById('formCreateProposal');
+  const inputProposalName = document.getElementById('inputProposalName');
+  const inputProposalClient = document.getElementById('inputProposalClient');
+  const inputProposalNotes = document.getElementById('inputProposalNotes');
+
+  function checkUserPinState() {
+    const currentEmail = userSelect ? userSelect.value : '';
+    const currentName = userDirectory[currentEmail] || 'Colaborador';
+
+    if (authenticatedUserEmail === currentEmail) {
+      // Usuario autenticado
+      if (formDaily) formDaily.classList.remove('form-content-locked');
+      if (pinStatusText) {
+        pinStatusText.className = 'pin-status-text unlocked';
+        pinStatusText.innerHTML = `✓ <strong>Sesión Activa:</strong> ${currentName} (PIN Validado)`;
+      }
+      if (btnOpenPinModal) btnOpenPinModal.style.display = 'none';
+      if (btnChangePinModal) btnChangePinModal.style.display = 'inline-block';
+    } else {
+      // Bloqueado
+      if (formDaily) formDaily.classList.add('form-content-locked');
+      if (pinStatusText) {
+        pinStatusText.className = 'pin-status-text locked';
+        pinStatusText.innerHTML = `🔒 <strong>Sesión Bloqueada:</strong> Ingresa el PIN de 4 números de ${currentName}`;
+      }
+      if (btnOpenPinModal) {
+        btnOpenPinModal.style.display = 'inline-block';
+        btnOpenPinModal.innerHTML = `🔑 Desbloquear (${currentName.split(' ')[0]})`;
+      }
+      if (btnChangePinModal) btnChangePinModal.style.display = 'none';
+    }
+  }
+
   if (userSelect && userEmailInput) {
     userSelect.addEventListener('change', () => {
       userEmailInput.value = userSelect.value;
+      authenticatedUserEmail = null; // Requiere re-validar PIN al cambiar de usuario
+      checkUserPinState();
       recalculateDayProgress();
     });
   }
+
+  // Eventos de Autenticación PIN
+  if (btnOpenPinModal) {
+    btnOpenPinModal.addEventListener('click', () => {
+      const currentEmail = userSelect ? userSelect.value : '';
+      const currentName = userDirectory[currentEmail] || 'Colaborador';
+      if (pinModalUserName) pinModalUserName.textContent = currentName;
+      if (inputUserPin) inputUserPin.value = '';
+      if (modalUserPinAuth) modalUserPinAuth.classList.add('open');
+      setTimeout(() => { if (inputUserPin) inputUserPin.focus(); }, 150);
+    });
+  }
+
+  if (btnClosePinModal) {
+    btnClosePinModal.addEventListener('click', () => {
+      if (modalUserPinAuth) modalUserPinAuth.classList.remove('open');
+    });
+  }
+
+  if (btnSubmitUserPin) {
+    btnSubmitUserPin.addEventListener('click', () => {
+      const currentEmail = userSelect ? userSelect.value : '';
+      const enteredPin = inputUserPin ? inputUserPin.value.trim() : '';
+      const userPins = getUserPins();
+      const expectedPin = userPins[currentEmail] || '1234';
+
+      if (enteredPin === expectedPin) {
+        authenticatedUserEmail = currentEmail;
+        checkUserPinState();
+        if (modalUserPinAuth) modalUserPinAuth.classList.remove('open');
+        showToast(`✓ Identidad validada exitosamente como ${userDirectory[currentEmail]}.`, 'success');
+      } else {
+        alert(`PIN incorrecto para ${userDirectory[currentEmail]}.\n(PIN inicial de fábrica: 1234)`);
+        if (inputUserPin) {
+          inputUserPin.value = '';
+          inputUserPin.focus();
+        }
+      }
+    });
+  }
+
+  if (inputUserPin) {
+    inputUserPin.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        btnSubmitUserPin.click();
+      }
+    });
+  }
+
+  // Cambiar PIN Personal
+  if (btnChangePinModal) {
+    btnChangePinModal.addEventListener('click', () => {
+      if (modalChangeUserPin) modalChangeUserPin.classList.add('open');
+      if (inputCurrentPin) inputCurrentPin.value = '';
+      if (inputNewPin) inputNewPin.value = '';
+      if (inputConfirmPin) inputConfirmPin.value = '';
+    });
+  }
+
+  if (btnCloseChangePinModal) {
+    btnCloseChangePinModal.addEventListener('click', () => {
+      if (modalChangeUserPin) modalChangeUserPin.classList.remove('open');
+    });
+  }
+
+  if (formChangeUserPin) {
+    formChangeUserPin.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const currentEmail = userSelect ? userSelect.value : '';
+      const userPins = getUserPins();
+      const expectedPin = userPins[currentEmail] || '1234';
+
+      if (inputCurrentPin.value !== expectedPin) {
+        alert('El PIN actual ingresado no es correcto.');
+        return;
+      }
+      if (inputNewPin.value.length !== 4 || !/^\d{4}$/.test(inputNewPin.value)) {
+        alert('El nuevo PIN debe consistir de exactamente 4 números (ej: 5821).');
+        return;
+      }
+      if (inputNewPin.value !== inputConfirmPin.value) {
+        alert('La confirmación del nuevo PIN no coincide.');
+        return;
+      }
+
+      userPins[currentEmail] = inputNewPin.value;
+      localStorage.setItem('ica_user_pins', JSON.stringify(userPins));
+      if (modalChangeUserPin) modalChangeUserPin.classList.remove('open');
+      showToast('✓ Tu PIN personal de 4 dígitos ha sido actualizado.', 'success');
+    });
+  }
+
+  // Creación Colaborativa de Propuestas
+  if (btnOpenNewProposal) {
+    btnOpenNewProposal.addEventListener('click', () => {
+      if (modalNewProposal) modalNewProposal.classList.add('open');
+      if (inputProposalName) inputProposalName.value = '';
+      if (inputProposalClient) inputProposalClient.value = '';
+      if (inputProposalNotes) inputProposalNotes.value = '';
+    });
+  }
+
+  if (btnCloseNewProposalModal) {
+    btnCloseNewProposalModal.addEventListener('click', () => {
+      if (modalNewProposal) modalNewProposal.classList.remove('open');
+    });
+  }
+
+  if (formCreateProposal) {
+    formCreateProposal.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = inputProposalName.value.trim();
+      const client = inputProposalClient.value.trim();
+      const notes = inputProposalNotes.value.trim();
+      const creator = userDirectory[userSelect.value] || 'Colaborador';
+
+      if (!name || !client) return;
+
+      const newProposalObj = {
+        id: 'PROP-' + Date.now(),
+        nombre: name,
+        cliente: client,
+        notas: notes,
+        creadoPor: creator,
+        fecha: new Date().toISOString(),
+        estado: 'Pendiente Revisión Admin'
+      };
+
+      const custom = JSON.parse(localStorage.getItem('ica_custom_proposals') || '[]');
+      custom.push(newProposalObj);
+      localStorage.setItem('ica_custom_proposals', JSON.stringify(custom));
+
+      const label = `[Propuesta] ${name} (${client})`;
+      if (!projectCatalog['Propuestas'].includes(label)) {
+        projectCatalog['Propuestas'].push(label);
+      }
+
+      // Crear fila automáticamente con la nueva propuesta
+      createTaskRow('Propuestas', label, 3.5, 'Redacción EETT / Informe', notes || 'Elaboración de propuesta');
+      
+      if (modalNewProposal) modalNewProposal.classList.remove('open');
+      showToast(`✓ Propuesta "${name}" registrada y asignada a tu jornada.`, 'success');
+    });
+  }
+
+  // Inicializar estado del PIN
+  checkUserPinState();
 
   // 3. Determinar Meta Diaria según Día de la Semana
   function getDailyTargetHours(dateString) {

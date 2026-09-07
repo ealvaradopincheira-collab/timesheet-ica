@@ -65,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           Acceso RRHH
         `;
+        const btnAdminPins = document.getElementById('btnAdminManagePinsCatalog');
+        if (btnAdminPins) btnAdminPins.style.display = 'none';
         if (adminNotificationBanner) adminNotificationBanner.style.display = 'none';
         showToast('Modo Administración desactivado.', 'info');
         renderDashboard();
@@ -94,14 +96,16 @@ document.addEventListener('DOMContentLoaded', () => {
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
           Admin: Elias Alvarado
         `;
+        const btnAdminPins = document.getElementById('btnAdminManagePinsCatalog');
+        if (btnAdminPins) btnAdminPins.style.display = 'inline-block';
         modalAdminAuth.classList.remove('open');
         if (adminNotificationBanner) {
           adminNotificationBanner.style.display = 'flex';
           adminNotificationBanner.innerHTML = `
-            <span>🛡️ <strong>Modo Administrador Activo:</strong> Puedes editar registros. Las alertas y registros de auditoría se emitirán exclusivamente a <strong>${ADMIN_EMAIL}</strong>.</span>
+            <span>🛡️ <strong>Modo Administrador Activo:</strong> Puedes editar registros, gestionar PINs de usuarios y administrar propuestas. Alertas dirigidas a <strong>${ADMIN_EMAIL}</strong>.</span>
           `;
         }
-        showToast('¡Bienvenido, Elias Alvarado! Modo edición activado.', 'success');
+        showToast('¡Bienvenido, Elias Alvarado! Modo edición y gestión activado.', 'success');
         renderDashboard();
       } else {
         alert('Clave incorrecta. Por favor contacta al Administrador.');
@@ -177,6 +181,123 @@ document.addEventListener('DOMContentLoaded', () => {
       }).catch(err => {
         alert('Error al contactar el endpoint: ' + err.message);
       });
+    });
+  // 1.2 Gestión de PINs y Propuestas (Admin: Elias Alvarado)
+  const btnAdminManagePinsCatalog = document.getElementById('btnAdminManagePinsCatalog');
+  const modalAdminCatalogAndPins = document.getElementById('modalAdminCatalogAndPins');
+  const btnCloseAdminPinsModal = document.getElementById('btnCloseAdminPinsModal');
+  const btnCloseAdminPinsFooter = document.getElementById('btnCloseAdminPinsFooter');
+  const tablePinsAdminBody = document.getElementById('tablePinsAdminBody');
+  const listAdminProposalsContainer = document.getElementById('listAdminProposalsContainer');
+
+  function renderAdminPinsAndProposals() {
+    const userPins = JSON.parse(localStorage.getItem('ica_user_pins') || '{}');
+    const teamMembersList = [
+      { name: 'Claudia León Rojas', email: 'cleon@icageo.cl' },
+      { name: 'Cristóbal Bravo', email: 'cbravo@icageo.cl' },
+      { name: 'Gonzalo Maragaño Carmona', email: 'gmaragano@icageo.cl' },
+      { name: 'Gonzalo Suárez', email: 'gsuarez@icageo.cl' },
+      { name: 'Javiera Rodríguez', email: 'jrodriguez@icageo.cl' }
+    ];
+
+    if (tablePinsAdminBody) {
+      tablePinsAdminBody.innerHTML = '';
+      teamMembersList.forEach(m => {
+        const pin = userPins[m.email] || '1234';
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #f1f5f9';
+        tr.innerHTML = `
+          <td style="padding: 0.5rem 0.75rem; font-weight: 600;">${m.name}</td>
+          <td style="padding: 0.5rem 0.75rem; color: #64748b;">${m.email}</td>
+          <td style="padding: 0.5rem 0.75rem;"><span style="font-family: monospace; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight: 700;">${pin}</span></td>
+          <td style="padding: 0.5rem 0.75rem; text-align: right;">
+            <button type="button" class="btn btn-outline btn-reset-pin" data-email="${m.email}" style="padding: 2px 8px; font-size: 0.75rem;">Resetear a 1234</button>
+          </td>
+        `;
+        tablePinsAdminBody.appendChild(tr);
+      });
+
+      // Eventos resetear PIN
+      document.querySelectorAll('.btn-reset-pin').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const email = btn.getAttribute('data-email');
+          userPins[email] = '1234';
+          localStorage.setItem('ica_user_pins', JSON.stringify(userPins));
+          renderAdminPinsAndProposals();
+          showToast(`✓ PIN de ${email} reseteado a 1234 exitosamente.`, 'success');
+        });
+      });
+    }
+
+    if (listAdminProposalsContainer) {
+      const customProposals = JSON.parse(localStorage.getItem('ica_custom_proposals') || '[]');
+      listAdminProposalsContainer.innerHTML = '';
+
+      if (customProposals.length === 0) {
+        listAdminProposalsContainer.innerHTML = '<p style="color: #94a3b8; font-size: 0.8rem; padding: 0.5rem;">No hay propuestas adicionales creadas por el equipo aún.</p>';
+      } else {
+        customProposals.forEach((p, idx) => {
+          const div = document.createElement('div');
+          div.style.cssText = 'padding: 0.6rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;';
+          div.innerHTML = `
+            <div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: #1e293b;">${p.nombre} <span style="font-weight: normal; color: #64748b;">(${p.cliente})</span></div>
+              <div style="font-size: 0.75rem; color: #64748b;">Creado por: <strong>${p.creadoPor}</strong> | Estado: <span class="badge badge-warning" style="font-size: 0.68rem;">${p.estado || 'Pendiente'}</span></div>
+            </div>
+            <div style="display: flex; gap: 0.4rem;">
+              <button type="button" class="btn btn-outline btn-approve-proposal" data-idx="${idx}" style="padding: 2px 8px; font-size: 0.75rem; color: #059669; border-color: #a7f3d0;">Aprobar / Asignar OT</button>
+              <button type="button" class="btn btn-outline btn-delete-proposal" data-idx="${idx}" style="padding: 2px 8px; font-size: 0.75rem; color: #dc2626; border-color: #fca5a5;">Eliminar</button>
+            </div>
+          `;
+          listAdminProposalsContainer.appendChild(div);
+        });
+
+        // Eventos de propuestas
+        document.querySelectorAll('.btn-approve-proposal').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-idx'));
+            const ot = prompt('Ingresa el código / OT oficial para esta propuesta:', 'PROP-2026-' + (idx + 1));
+            if (ot) {
+              customProposals[idx].estado = `Aprobado (OT: ${ot})`;
+              localStorage.setItem('ica_custom_proposals', JSON.stringify(customProposals));
+              renderAdminPinsAndProposals();
+              showToast(`✓ Propuesta aprobada con OT: ${ot}. Alerta enviada a ${ADMIN_EMAIL}.`, 'success');
+            }
+          });
+        });
+
+        document.querySelectorAll('.btn-delete-proposal').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-idx'));
+            if (confirm(`¿Eliminar la propuesta "${customProposals[idx].nombre}"?`)) {
+              customProposals.splice(idx, 1);
+              localStorage.setItem('ica_custom_proposals', JSON.stringify(customProposals));
+              renderAdminPinsAndProposals();
+              showToast('Propuesta eliminada.', 'info');
+            }
+          });
+        });
+      }
+    }
+  }
+
+  if (btnAdminManagePinsCatalog) {
+    btnAdminManagePinsCatalog.addEventListener('click', () => {
+      if (modalAdminCatalogAndPins) {
+        modalAdminCatalogAndPins.classList.add('open');
+        renderAdminPinsAndProposals();
+      }
+    });
+  }
+
+  if (btnCloseAdminPinsModal) {
+    btnCloseAdminPinsModal.addEventListener('click', () => {
+      modalAdminCatalogAndPins.classList.remove('open');
+    });
+  }
+  if (btnCloseAdminPinsFooter) {
+    btnCloseAdminPinsFooter.addEventListener('click', () => {
+      modalAdminCatalogAndPins.classList.remove('open');
     });
   }
 

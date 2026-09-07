@@ -38,7 +38,18 @@
         </div>
       </div>
 
-      <form id="formDailyTimesheet">
+        <!-- Barra de Autenticación y PIN Personal -->
+        <div class="pin-auth-banner">
+          <div class="pin-status-text locked" id="pinStatusText">
+            🔒 <strong>Sesión Bloqueada:</strong> Ingresa tu PIN de 4 dígitos para habilitar el registro.
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn-pin-action" id="btnOpenPinModal">🔑 Ingresar PIN</button>
+            <button type="button" class="btn-pin-action" id="btnChangePinModal" style="display: none;">⚙️ Cambiar mi PIN</button>
+          </div>
+        </div>
+
+        <form id="formDailyTimesheet" class="form-content-locked">
         <!-- Metadatos de la Jornada -->
         <div class="form-meta-grid">
           <div class="input-group">
@@ -134,9 +145,14 @@
         <!-- Tareas del Día -->
         <div class="tasks-section-title">
           <h3>Distribución de Tareas del Día</h3>
-          <button type="button" class="btn btn-outline" id="btnAddTask" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
-            + Agregar Otra Tarea
-          </button>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-outline" id="btnOpenNewProposal" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; border-color: #0284c7; color: #0369a1;">
+              + Proponer Nueva Propuesta
+            </button>
+            <button type="button" class="btn btn-outline" id="btnAddTask" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+              + Agregar Otra Tarea
+            </button>
+          </div>
         </div>
 
         <div id="tasksContainer">
@@ -156,6 +172,91 @@
       </form>
     </div>
   </main>
+
+  <!-- MODAL: INGRESO PIN PERSONAL -->
+  <div class="modal-overlay" id="modalUserPinAuth">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 id="pinModalTitle">🔑 Ingreso Seguro por PIN</h3>
+        <button type="button" class="modal-close" id="btnClosePinModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          Hola, <strong id="pinModalUserName">Colaborador</strong>. Ingresa tu PIN de 4 números para desbloquear la carga de horas de hoy.
+        </p>
+        <div class="input-group" style="align-items: center; margin-bottom: 1rem;">
+          <input type="password" class="input-control" id="inputUserPin" maxlength="4" inputmode="numeric" placeholder="••••" style="font-size: 2rem; letter-spacing: 0.5em; text-align: center; width: 180px; font-weight: 800;">
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">
+          * PIN inicial por defecto: <code>1234</code>. Podrás cambiarlo una vez ingreses.
+        </p>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-primary" id="btnSubmitUserPin" style="width: 100%;">Validar y Desbloquear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CAMBIAR PIN PERSONAL -->
+  <div class="modal-overlay" id="modalChangeUserPin">
+    <div class="modal-card" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3>⚙️ Cambiar mi PIN Personal</h3>
+        <button type="button" class="modal-close" id="btnCloseChangePinModal">&times;</button>
+      </div>
+      <form id="formChangeUserPin">
+        <div class="modal-body">
+          <div class="input-group" style="margin-bottom: 0.85rem;">
+            <label>PIN Actual</label>
+            <input type="password" class="input-control" id="inputCurrentPin" maxlength="4" inputmode="numeric" required placeholder="••••">
+          </div>
+          <div class="input-group" style="margin-bottom: 0.85rem;">
+            <label>Nuevo PIN (4 números)</label>
+            <input type="password" class="input-control" id="inputNewPin" maxlength="4" inputmode="numeric" required placeholder="••••">
+          </div>
+          <div class="input-group">
+            <label>Confirmar Nuevo PIN</label>
+            <input type="password" class="input-control" id="inputConfirmPin" maxlength="4" inputmode="numeric" required placeholder="••••">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Actualizar mi PIN</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRO DE NUEVA PROPUESTA -->
+  <div class="modal-overlay" id="modalNewProposal">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3>💡 Proponer Nueva Propuesta / Licitación</h3>
+        <button type="button" class="modal-close" id="btnCloseNewProposalModal">&times;</button>
+      </div>
+      <form id="formCreateProposal">
+        <div class="modal-body">
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Cualquier colaborador puede crear una propuesta. Quedará disponible inmediatamente en el formulario y la administración podrá validarla o asignarle OT oficial.
+          </p>
+          <div class="input-group" style="margin-bottom: 0.85rem;">
+            <label>Nombre de la Propuesta / Servicio</label>
+            <input type="text" class="input-control" id="inputProposalName" placeholder="Ej: Licitación Hidrogeología Quebrada Blanca" required>
+          </div>
+          <div class="input-group" style="margin-bottom: 0.85rem;">
+            <label>Cliente / Mandante</label>
+            <input type="text" class="input-control" id="inputProposalClient" placeholder="Ej: Teck / Codelco / Anglo" required>
+          </div>
+          <div class="input-group">
+            <label>Notas / Alcance Breve</label>
+            <textarea class="input-control" id="inputProposalNotes" rows="2" placeholder="Detalle preliminar..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Registrar y Usar Propuesta</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script src="js/calendar_form.js"></script>
 </body>
