@@ -62,6 +62,14 @@
           <p>Meta Semanal: 31.0 HH efectivas (Lunes a Jueves: 7.0h | Viernes: 3.0h)</p>
         </div>
         <div class="topbar-filters">
+          <div style="display: flex; align-items: center; gap: 0.4rem; background: white; border: 1px solid #cbd5e1; border-radius: var(--radius-md); padding: 0.2rem 0.5rem;">
+            <label for="selectDashboardPeriod" style="font-size: 0.78rem; font-weight: 700; color: #475569; white-space: nowrap;">📅 Período:</label>
+            <select id="selectDashboardPeriod" class="input-control" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; border: none; background: transparent; font-weight: 600; color: #0f172a; cursor: pointer;">
+              <option value="all">Todas las Semanas (Acumulado: 233.9 HH)</option>
+              <option value="w1">Semana 1 (24 al 28 de Agosto: 124.9 HH)</option>
+              <option value="w2">Semana 2 (31 de Agosto al 04 de Septiembre: 109.0 HH)</option>
+            </select>
+          </div>
           <button type="button" class="btn btn-outline" id="btnAdminManagePinsCatalog" style="font-size: 0.82rem; display: none;">
             👥 PINs & Propuestas
           </button>
@@ -593,6 +601,45 @@
     </div>
   </div>
 
+  <!-- ========================================================
+       MODAL 8: DETALLE DE ACTIVIDADES DEL CONSULTOR (AUDITORÍA / VISTA)
+       ======================================================== -->
+  <div class="modal-overlay" id="modalUserDetailView">
+    <div class="modal-card" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3 id="detailModalTitle">📋 Detalle de Tareas: Consultor</h3>
+        <button type="button" class="modal-close" id="btnCloseDetailModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; background: #f8fafc; padding: 0.75rem 1rem; border-radius: var(--radius-sm); border-left: 3px solid var(--color-primary);">
+          <div>
+            <div id="detailModalUserName" style="font-weight: 700; font-size: 0.95rem; color: #1e293b;">-</div>
+            <div id="detailModalUserEmail" style="font-size: 0.8rem; color: #64748b;">-</div>
+          </div>
+          <div id="detailModalTotalHH" style="font-size: 1.25rem; font-weight: 800; color: var(--color-primary);">0.0 HH</div>
+        </div>
+        <div style="max-height: 320px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+            <thead style="background: #f1f5f9; border-bottom: 1px solid var(--border-color); text-align: left; position: sticky; top: 0;">
+              <tr>
+                <th style="padding: 0.5rem 0.6rem;">Fecha</th>
+                <th style="padding: 0.5rem 0.6rem;">Proyecto</th>
+                <th style="padding: 0.5rem 0.6rem; text-align: center;">HH</th>
+                <th style="padding: 0.5rem 0.6rem;">Actividad / Detalle</th>
+              </tr>
+            </thead>
+            <tbody id="detailModalTableBody">
+              <!-- Filas generadas dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: flex-end;">
+        <button type="button" class="btn btn-outline" id="btnCloseDetailFooter">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Script para Alternar Vistas -->
   <script>
     function switchView(view) {
@@ -615,6 +662,7 @@
   </script>
 
   <!-- Lógica de Negocio -->
+  <script src="js/team_data.js"></script>
   <script src="js/calendar_form.js"></script>
   <script src="js/app.js"></script>
 </body>

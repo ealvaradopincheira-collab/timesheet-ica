@@ -305,8 +305,59 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Cerrar modales de admin al hacer clic fuera del recuadro
-  [modalAdminAuth, modalEditRecord, modalM365Settings, modalAdminCatalogAndPins].forEach(modal => {
+  // Modal Detalle de Tareas del Consultor
+  const modalUserDetailView = document.getElementById('modalUserDetailView');
+  const btnCloseDetailModal = document.getElementById('btnCloseDetailModal');
+  const btnCloseDetailFooter = document.getElementById('btnCloseDetailFooter');
+  const detailModalUserName = document.getElementById('detailModalUserName');
+  const detailModalUserEmail = document.getElementById('detailModalUserEmail');
+  const detailModalTotalHH = document.getElementById('detailModalTotalHH');
+  const detailModalTableBody = document.getElementById('detailModalTableBody');
+
+  function openDetailModal(member, userRecords) {
+    if (!modalUserDetailView) return;
+    if (detailModalUserName) detailModalUserName.textContent = member.name;
+    if (detailModalUserEmail) detailModalUserEmail.textContent = member.email;
+    const totalH = userRecords.reduce((acc, r) => acc + (r.totalHH || 0), 0);
+    if (detailModalTotalHH) detailModalTotalHH.textContent = totalH.toFixed(1) + ' HH';
+
+    if (detailModalTableBody) {
+      detailModalTableBody.innerHTML = '';
+      if (userRecords.length === 0) {
+        detailModalTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 1.5rem; color: #94a3b8;">Sin actividades registradas en el período seleccionado.</td></tr>';
+      } else {
+        const sortedRecords = [...userRecords].sort((a, b) => a.fecha.localeCompare(b.fecha));
+        sortedRecords.forEach(r => {
+          (r.tareas || []).forEach(t => {
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid #f1f5f9';
+            tr.innerHTML = `
+              <td style="padding: 0.45rem 0.6rem; font-weight: 600; white-space: nowrap; color: #334155;">${r.fecha}</td>
+              <td style="padding: 0.45rem 0.6rem;"><span class="project-chip" style="font-size: 0.72rem;">${t.proyecto}</span></td>
+              <td style="padding: 0.45rem 0.6rem; text-align: center; font-weight: 700; color: var(--color-primary);">${t.horas.toFixed(1)}</td>
+              <td style="padding: 0.45rem 0.6rem; color: #475569;"><strong>${t.actividad}</strong>: ${t.detalle || ''}</td>
+            `;
+            detailModalTableBody.appendChild(tr);
+          });
+        });
+      }
+    }
+    modalUserDetailView.classList.add('open');
+  }
+
+  if (btnCloseDetailModal) {
+    btnCloseDetailModal.addEventListener('click', () => {
+      if (modalUserDetailView) modalUserDetailView.classList.remove('open');
+    });
+  }
+  if (btnCloseDetailFooter) {
+    btnCloseDetailFooter.addEventListener('click', () => {
+      if (modalUserDetailView) modalUserDetailView.classList.remove('open');
+    });
+  }
+
+  // Cerrar modales al hacer clic fuera del recuadro (backdrop)
+  [modalAdminAuth, modalEditRecord, modalM365Settings, modalAdminCatalogAndPins, modalUserDetailView].forEach(modal => {
     if (modal) {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('open');
@@ -314,10 +365,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Selector de Período en la Barra Superior
+  const selectDashboardPeriod = document.getElementById('selectDashboardPeriod');
+  if (selectDashboardPeriod) {
+    selectDashboardPeriod.addEventListener('change', () => {
+      renderDashboard();
+    });
+  }
+
   // 2. Renderizado del Dashboard y Tablero Kanban
   function renderDashboard() {
     const rawData = JSON.parse(localStorage.getItem('ica_timesheet_data') || '[]');
-    
+    const periodSelect = document.getElementById('selectDashboardPeriod');
+    const selectedPeriod = periodSelect ? periodSelect.value : 'all';
+
+    let filteredData = rawData;
+    let targetWeekly = 62.0; // 2 semanas estándar (all)
+    let periodSubtextStr = "Horas acumuladas del período (24 Ago - 04 Sep)";
+
+    if (selectedPeriod === 'w1') {
+      filteredData = rawData.filter(r => r.fecha >= '2026-08-24' && r.fecha <= '2026-08-28');
+      targetWeekly = 31.0;
+      periodSubtextStr = "Horas acumuladas Semana 1 (24 al 28 Agosto)";
+    } else if (selectedPeriod === 'w2') {
+      filteredData = rawData.filter(r => r.fecha >= '2026-08-31' && r.fecha <= '2026-09-04');
+      targetWeekly = 31.0;
+      periodSubtextStr = "Horas acumuladas Semana 2 (31 Ago al 04 Sep)";
+    }
+
+    const kpiHoursSub = document.querySelector('#kpiTotalHours + .kpi-subtext');
+    if (kpiHoursSub) kpiHoursSub.textContent = periodSubtextStr;
+
     // Lista de Colaboradores Oficiales
     const teamMembers = [
       { name: 'Claudia León Rojas', email: 'cleon@icageo.cl', initials: 'CL' },
@@ -338,11 +416,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectHoursMap = {};
 
     teamMembers.forEach(member => {
-      // Filtrar registros del colaborador
-      const userRecords = rawData.filter(r => r.usuarioCorreo === member.email);
+      // Filtrar registros del colaborador en el período
+      const userRecords = filteredData.filter(r => r.usuarioCorreo === member.email);
       let userTotalHH = 0;
       const userProjects = new Set();
-      let latestTaskDesc = 'Sin actividad registrada hoy';
+      let latestTaskDesc = 'Sin actividad registrada en este período';
       let hasTerrain = false;
 
       userRecords.forEach(rec => {
@@ -357,17 +435,16 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       totalTeamHours += userTotalHH;
-      const targetWeekly = 31.0; // 7h L-J (28h) + 3h V = 31.0h efectivas
-      
+
       // Determinar columna Kanban
       let columnTarget = colPending;
       let statusBadge = '<span class="badge badge-warning">Pendiente</span>';
 
       if (userTotalHH >= targetWeekly && !hasTerrain) {
         columnTarget = colOnTrack;
-        statusBadge = '<span class="badge badge-success">Al Día (31h)</span>';
+        statusBadge = `<span class="badge badge-success">Al Día (${targetWeekly.toFixed(0)}h)</span>`;
         usersOnTrackCount++;
-      } else if (hasTerrain || userTotalHH > 35) {
+      } else if (hasTerrain || userTotalHH > targetWeekly + 4.0) {
         columnTarget = colTerrain;
         statusBadge = '<span class="badge badge-info">Terreno Extendido</span>';
         usersOnTrackCount++;
@@ -379,8 +456,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Crear Tarjeta Kanban
       const card = document.createElement('div');
       card.className = 'kanban-card';
+      card.style.cursor = 'pointer';
       
-      const projectChipsHtml = Array.from(userProjects).slice(0, 3).map(p => 
+      const projectChipsHtml = Array.from(userProjects).slice(0, 4).map(p => 
         `<span class="project-chip">${p}</span>`
       ).join('');
 
@@ -407,18 +485,30 @@ document.addEventListener('DOMContentLoaded', () => {
           <div>${statusBadge}</div>
           <button type="button" class="btn-card-edit" data-email="${member.email}">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            Editar Registro
+            ${isAdminAuthenticated ? 'Editar Horas' : 'Ver Tareas'}
           </button>
         </div>
       `;
 
-      // Evento de Edición Admin
+      // Evento de clic en tarjeta o botón
       const btnEdit = card.querySelector('.btn-card-edit');
       if (btnEdit) {
-        btnEdit.addEventListener('click', () => {
-          openEditModal(member, userRecords);
+        btnEdit.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (isAdminAuthenticated) {
+            openEditModal(member, userRecords);
+          } else {
+            openDetailModal(member, userRecords);
+          }
         });
       }
+      card.addEventListener('click', () => {
+        if (isAdminAuthenticated) {
+          openEditModal(member, userRecords);
+        } else {
+          openDetailModal(member, userRecords);
+        }
+      });
 
       columnTarget.appendChild(card);
     });
@@ -590,77 +680,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. Datos Semilla Iniciales Basados en el Equipo Real
+  // 6. Carga Inicial de Datos Reales Consolidados del Equipo
   function initSeedData() {
-    if (!localStorage.getItem('ica_timesheet_data')) {
-      const seed = [
-        {
-          id: 'TS-20260901-01',
-          fecha: '2026-09-04',
-          usuarioCorreo: 'cbravo@icageo.cl',
-          usuarioNombre: 'Cristóbal Bravo',
-          tipoJornada: 'Oficina_Efectiva',
-          totalHH: 31.0,
-          tareas: [
-            { categoria: 'Proyectos', proyecto: 'Kinross', horas: 24.0, actividad: 'Redacción EETT / Informe', detalle: 'Metodología y resultados de modelo hidrogeológico' },
-            { categoria: 'Proyectos', proyecto: 'HMC - Tambo de Oro', horas: 7.0, actividad: 'Modelación / Análisis Numérico', detalle: 'Perfiles en Leapfrog' }
-          ],
-          estadoRevision: 'Al Día'
-        },
-        {
-          id: 'TS-20260901-02',
-          fecha: '2026-09-04',
-          usuarioCorreo: 'cleon@icageo.cl',
-          usuarioNombre: 'Claudia León Rojas',
-          tipoJornada: 'Oficina_Efectiva',
-          totalHH: 28.0,
-          tareas: [
-            { categoria: 'Proyectos', proyecto: 'B-Ambiental', horas: 16.0, actividad: 'Hidroquímica / Isótopos', detalle: 'Pimentón: Isótopos molécula de agua' },
-            { categoria: 'Proyectos', proyecto: 'INOGEN', horas: 12.0, actividad: 'Redacción EETT / Informe', detalle: 'Revisión técnica de figuras' }
-          ],
-          estadoRevision: 'Al Día'
-        },
-        {
-          id: 'TS-20260901-03',
-          fecha: '2026-09-04',
-          usuarioCorreo: 'gmaragano@icageo.cl',
-          usuarioNombre: 'Gonzalo Maragaño Carmona',
-          tipoJornada: 'Oficina_Efectiva',
-          totalHH: 31.0,
-          tareas: [
-            { categoria: 'Proyectos', proyecto: 'Kinross', horas: 20.0, actividad: 'Modelación / Análisis Numérico', detalle: 'Modelo LNF parámetros hidráulicos' },
-            { categoria: 'Proyectos', proyecto: 'MyMA', horas: 11.0, actividad: 'SIG / Cartografía', detalle: 'DIA glaciares y permafrost' }
-          ],
-          estadoRevision: 'Al Día'
-        },
-        {
-          id: 'TS-20260901-04',
-          fecha: '2026-09-04',
-          usuarioCorreo: 'gsuarez@icageo.cl',
-          usuarioNombre: 'Gonzalo Suárez',
-          tipoJornada: 'Parcial',
-          totalHH: 21.0,
-          tareas: [
-            { categoria: 'Proyectos', proyecto: 'BHP Experto', horas: 14.0, actividad: 'Redacción EETT / Informe', detalle: 'Revisión antecedentes' },
-            { categoria: 'Gestión Interna', proyecto: 'Gestión Interna / Reunión', horas: 7.0, actividad: 'Reunión Interna / Planificación', detalle: 'Exámenes ASCH y coordinación' }
-          ],
-          estadoRevision: 'Pendiente'
-        },
-        {
-          id: 'TS-20260901-05',
-          fecha: '2026-09-04',
-          usuarioCorreo: 'jrodriguez@icageo.cl',
-          usuarioNombre: 'Javiera Rodríguez',
-          tipoJornada: 'Terreno_Extendido',
-          totalHH: 38.0,
-          tareas: [
-            { categoria: 'Proyectos', proyecto: 'B-Ambiental', horas: 26.0, actividad: 'Terreno / Piezometría', detalle: 'Campaña piezométrica en terreno' },
-            { categoria: 'Proyectos', proyecto: 'Otros', horas: 12.0, actividad: 'Reunión Técnica con Cliente', detalle: 'Inducciones CCU Quilicura' }
-          ],
-          estadoRevision: 'En Terreno'
-        }
-      ];
-      localStorage.setItem('ica_timesheet_data', JSON.stringify(seed));
+    const isV3 = localStorage.getItem('ica_timesheet_v3_imported');
+    if (!isV3 && window.ICA_REAL_TEAM_DATA && window.ICA_REAL_TEAM_DATA.length > 0) {
+      localStorage.setItem('ica_timesheet_data', JSON.stringify(window.ICA_REAL_TEAM_DATA));
+      localStorage.setItem('ica_timesheet_v3_imported', 'true');
     }
   }
 });
