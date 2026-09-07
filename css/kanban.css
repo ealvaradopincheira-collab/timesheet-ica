@@ -1,0 +1,340 @@
+/* ==========================================================================
+   ICA Geoconsultores - Sistema de Timesheet Corporativo
+   Estilos del Tablero Kanban y Panel de Métricas
+   ========================================================================== */
+
+/* Barra Superior del Dashboard */
+.dashboard-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.topbar-title h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.35rem;
+  color: var(--color-primary-dark);
+}
+
+.topbar-title p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.topbar-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Fila de Tarjetas de Métricas (KPIs) */
+.metrics-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--color-primary);
+}
+
+.kpi-card.kpi-success::before { background: var(--color-success); }
+.kpi-card.kpi-warning::before { background: var(--color-warning); }
+.kpi-card.kpi-info::before    { background: var(--color-info); }
+.kpi-card.kpi-purple::before  { background: var(--color-purple); }
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: var(--color-primary-dark);
+  margin: 0.4rem 0 0.2rem 0;
+}
+
+.kpi-subtext {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Desglose Gráfico Rápido */
+.analytics-split-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.analytics-panel {
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.analytics-panel h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.project-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.project-bar-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.project-bar-track {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.project-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-light), var(--color-accent));
+  border-radius: var(--radius-full);
+}
+
+/* Tablero Kanban */
+.kanban-board-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+.kanban-column {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+}
+
+.kanban-column-header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  background: white;
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.column-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.column-count {
+  background: var(--bg-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+}
+
+.kanban-cards-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  flex-grow: 1;
+}
+
+/* Tarjeta de Colaborador en Kanban */
+.kanban-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.kanban-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.6rem;
+}
+
+.card-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.user-names h4 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.user-names span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.card-hours-badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.card-hours-badge small {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.card-projects-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.6rem 0;
+}
+
+.project-chip {
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e2e8f0;
+}
+
+.card-recent-task {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: #f8fafc;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  margin-top: 0.4rem;
+  border-left: 2px solid var(--color-accent);
+}
+
+.card-actions-bar {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-status-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.btn-card-edit {
+  display: none; /* Se activa cuando Admin se autentica */
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-card-edit:hover {
+  background: #f1f5f9;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+body.admin-authenticated .btn-card-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
