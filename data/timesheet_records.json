@@ -33,6 +33,39 @@
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-EA-2026-08-24",
+    "fecha": "2026-08-24",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Terreno_Extendido",
+    "totalHH": 6.5,
+    "tareas": [
+      {
+        "proyecto": "Minera Las Luces (MLC)",
+        "categoria": "Proyectos",
+        "horas": 1.0,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "Coordinación Las Luces"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 0.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Reunión Daily Pimenton"
+      },
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 5.0,
+        "actividad": "Gestión y Consolidación de BBDD",
+        "detalle": "BBDD Kinross; HQ e isotopos Kinross"
+      }
+    ],
+    "timestamp": "2026-08-24T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-GM-2026-08-24",
     "fecha": "2026-08-24",
     "usuarioNombre": "Gonzalo Maragaño Carmona",
@@ -41,7 +74,7 @@
     "totalHH": 7.0,
     "tareas": [
       {
-        "proyecto": "Minera Pimentón",
+        "proyecto": "Kinross - LNF",
         "categoria": "Proyectos",
         "horas": 7.0,
         "actividad": "Elaboración de Informe Especializado",
@@ -138,6 +171,53 @@
         "horas": 0.2,
         "actividad": "Análisis Isotópico / Hidroquímica / Gabinete",
         "detalle": "Envío hitos de pago propuesta BSF"
+      }
+    ],
+    "timestamp": "2026-08-25T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-08-25",
+    "fecha": "2026-08-25",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 6.5,
+    "tareas": [
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 1.0,
+        "actividad": "Hidroquímica e Isótopos",
+        "detalle": "Redacción HQ e isótopos Kinross"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 0.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Reunión Daily Pimenton"
+      },
+      {
+        "proyecto": "Gestión Interna / ICA",
+        "categoria": "Gestión Interna",
+        "horas": 1.5,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "Reunión semanal ICA"
+      },
+      {
+        "proyecto": "HMC - Tambo de Oro",
+        "categoria": "Proyectos",
+        "horas": 1.5,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "Proyecto Blanco MyMA"
+      },
+      {
+        "proyecto": "CCU Quilicura",
+        "categoria": "Proyectos",
+        "horas": 2.0,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "Acreditación CCU"
       }
     ],
     "timestamp": "2026-08-25T18:00:00.000Z",
@@ -274,6 +354,32 @@
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-EA-2026-08-26",
+    "fecha": "2026-08-26",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 6.5,
+    "tareas": [
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 6.0,
+        "actividad": "Gestión y Consolidación de BBDD",
+        "detalle": "BBDD Kinross Meteorologia; Actualización Geofisica Kinross"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 0.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Reunión Daily Pimenton"
+      }
+    ],
+    "timestamp": "2026-08-26T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-GM-2026-08-26",
     "fecha": "2026-08-26",
     "usuarioNombre": "Gonzalo Maragaño Carmona",
@@ -383,6 +489,32 @@
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-EA-2026-08-27",
+    "fecha": "2026-08-27",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 3.0,
+        "actividad": "Geofísica y Sensores Remotos",
+        "detalle": "Redacción Geofisica Kinross"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 4.0,
+        "actividad": "Gestión y Consolidación de BBDD",
+        "detalle": "Reunión Daily Pimenton; BBDD Niveles y Piezometría Pimenton; BBDD HQ e Isotopos Pimentón"
+      }
+    ],
+    "timestamp": "2026-08-27T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-GM-2026-08-27",
     "fecha": "2026-08-27",
     "usuarioNombre": "Gonzalo Maragaño Carmona",
@@ -391,7 +523,7 @@
     "totalHH": 7.0,
     "tareas": [
       {
-        "proyecto": "Minera Pimentón",
+        "proyecto": "Kinross - LNF",
         "categoria": "Proyectos",
         "horas": 7.0,
         "actividad": "Elaboración de Informe Especializado",
@@ -513,6 +645,46 @@
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-EA-2026-08-28",
+    "fecha": "2026-08-28",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Terreno_Extendido",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 1.5,
+        "actividad": "Geofísica y Sensores Remotos",
+        "detalle": "Redacción Geofisica Kinross; Kinross"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 3.0,
+        "actividad": "Gestión y Consolidación de BBDD",
+        "detalle": "Reunión Daily Pimenton; BBDD HQ e Isotopos Pimentón"
+      },
+      {
+        "proyecto": "Minera Las Luces (MLC)",
+        "categoria": "Proyectos",
+        "horas": 1.5,
+        "actividad": "Supervisión de Terreno",
+        "detalle": "Coordinación terreno Las Luces"
+      },
+      {
+        "proyecto": "CCU Quilicura",
+        "categoria": "Proyectos",
+        "horas": 1.0,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "Reunión CCU Renca"
+      }
+    ],
+    "timestamp": "2026-08-28T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-GM-2026-08-28",
     "fecha": "2026-08-28",
     "usuarioNombre": "Gonzalo Maragaño Carmona",
@@ -521,7 +693,7 @@
     "totalHH": 3.0,
     "tareas": [
       {
-        "proyecto": "Minera Pimentón",
+        "proyecto": "Kinross - LNF",
         "categoria": "Proyectos",
         "horas": 3.0,
         "actividad": "Elaboración de Informe Especializado",
@@ -584,6 +756,25 @@
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-EA-2026-08-29",
+    "fecha": "2026-08-29",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 3.0,
+    "tareas": [
+      {
+        "proyecto": "Gestión Interna / ICA",
+        "categoria": "Gestión Interna",
+        "horas": 3.0,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Programación Minuta y Daily"
+      }
+    ],
+    "timestamp": "2026-08-29T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-CL-2026-08-31",
     "fecha": "2026-08-31",
     "usuarioNombre": "Claudia León Rojas",
@@ -611,6 +802,46 @@
         "horas": 0.5,
         "actividad": "Análisis Isotópico / Hidroquímica / Gabinete",
         "detalle": "BSF: Oficio Laguna Sur"
+      }
+    ],
+    "timestamp": "2026-08-31T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-08-31",
+    "fecha": "2026-08-31",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 6.5,
+    "tareas": [
+      {
+        "proyecto": "CCU Quilicura",
+        "categoria": "Proyectos",
+        "horas": 1.0,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "Inducción Martin CCU Quilicura"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 2.5,
+        "actividad": "Hidroquímica e Isótopos",
+        "detalle": "Reunión Daily Pimenton; Balance Iónico Pimentón"
+      },
+      {
+        "proyecto": "Gestión Interna / ICA",
+        "categoria": "Gestión Interna",
+        "horas": 1.5,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "Reunión semanal ICA"
+      },
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 1.5,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "Redacción Geofísica Kinross"
       }
     ],
     "timestamp": "2026-08-31T18:00:00.000Z",
@@ -728,6 +959,46 @@
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-EA-2026-09-01",
+    "fecha": "2026-09-01",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Terreno_Extendido",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Las Luces (MLC)",
+        "categoria": "Proyectos",
+        "horas": 1.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Reunion MLC Mina; Coordinacion Las Luces"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 0.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Reunión Daily Pimenton"
+      },
+      {
+        "proyecto": "CCU Quilicura",
+        "categoria": "Proyectos",
+        "horas": 3.0,
+        "actividad": "Habilitación Operativa y Seguridad",
+        "detalle": "Carpeta de arranque Quilicura; Inducción CCU Quilicura"
+      },
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 2.0,
+        "actividad": "Gestión y Consolidación de BBDD",
+        "detalle": "BBDD Niveles Kinross"
+      }
+    ],
+    "timestamp": "2026-09-01T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-GM-2026-09-01",
     "fecha": "2026-09-01",
     "usuarioNombre": "Gonzalo Maragaño Carmona",
@@ -835,8 +1106,8 @@
         "detalle": "BSF: Los Mares (Ver oficio, llamar a Mariela)"
       },
       {
-        "proyecto": "Gestión Interna / ICA",
-        "categoria": "Gestión Interna",
+        "proyecto": "HMC - Tambo de Oro",
+        "categoria": "Proyectos",
         "horas": 0.5,
         "actividad": "Análisis Isotópico / Hidroquímica / Gabinete",
         "detalle": "Correos: Pedir información a Myma Planta"
@@ -859,6 +1130,39 @@
         "horas": 8.0,
         "actividad": "Modelación Leapfrog",
         "detalle": "Georreferenciación de perfiles hidrogeológicos en software Leapfrog"
+      }
+    ],
+    "timestamp": "2026-09-02T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-09-02",
+    "fecha": "2026-09-02",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Terreno_Extendido",
+    "totalHH": 6.5,
+    "tareas": [
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 5.0,
+        "actividad": "Modelación y Perfiles Hidrogeológicos",
+        "detalle": "BBDD Niveles Kinross; Vectorizado de perfiles en leapfrog Kinross"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 0.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Reunión Daily Pimenton"
+      },
+      {
+        "proyecto": "Minera Las Luces (MLC)",
+        "categoria": "Proyectos",
+        "horas": 1.0,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "Reunión Las Luces MLC"
       }
     ],
     "timestamp": "2026-09-02T18:00:00.000Z",
@@ -995,6 +1299,32 @@
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-EA-2026-09-03",
+    "fecha": "2026-09-03",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Terreno_Extendido",
+    "totalHH": 8.0,
+    "tareas": [
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 7.5,
+        "actividad": "Modelación y Perfiles Hidrogeológicos",
+        "detalle": "Imágenes Satelitales BH Kinross; Vectorizado de perfiles en leapfrog Kinross; Perfiles Kinross"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 0.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Reunión Daily Pimenton"
+      }
+    ],
+    "timestamp": "2026-09-03T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-GM-2026-09-03",
     "fecha": "2026-09-03",
     "usuarioNombre": "Gonzalo Maragaño Carmona",
@@ -1125,6 +1455,39 @@
     "estadoRevision": "Al Día"
   },
   {
+    "id": "TS-EA-2026-09-04",
+    "fecha": "2026-09-04",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Terreno_Extendido",
+    "totalHH": 11.0,
+    "tareas": [
+      {
+        "proyecto": "Minera Las Luces (MLC)",
+        "categoria": "Proyectos",
+        "horas": 4.5,
+        "actividad": "Supervisión de Terreno",
+        "detalle": "Examenes Las Luces; Revisión Propuesta Pruebas Packer Las Luces; Coordinación terreno Las Luces"
+      },
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 0.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Reunión Daily Pimenton"
+      },
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 6.0,
+        "actividad": "Modelación y Perfiles Hidrogeológicos",
+        "detalle": "Perfiles Kinross"
+      }
+    ],
+    "timestamp": "2026-09-04T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
     "id": "TS-GM-2026-09-04",
     "fecha": "2026-09-04",
     "usuarioNombre": "Gonzalo Maragaño Carmona",
@@ -1193,6 +1556,77 @@
       }
     ],
     "timestamp": "2026-09-04T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-09-05",
+    "fecha": "2026-09-05",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 4.5,
+    "tareas": [
+      {
+        "proyecto": "Kinross - LNF",
+        "categoria": "Proyectos",
+        "horas": 4.5,
+        "actividad": "Modelación y Perfiles Hidrogeológicos",
+        "detalle": "Perfiles Kinross"
+      }
+    ],
+    "timestamp": "2026-09-05T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-09-06",
+    "fecha": "2026-09-06",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Normal",
+    "totalHH": 1.5,
+    "tareas": [
+      {
+        "proyecto": "Minera Pimentón",
+        "categoria": "Proyectos",
+        "horas": 1.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Programación Daily Pimenton"
+      }
+    ],
+    "timestamp": "2026-09-06T18:00:00.000Z",
+    "estadoRevision": "Al Día"
+  },
+  {
+    "id": "TS-EA-2026-09-07",
+    "fecha": "2026-09-07",
+    "usuarioNombre": "Elias Alvarado",
+    "usuarioCorreo": "ealvarado@icageo.cl",
+    "tipoJornada": "Terreno_Extendido",
+    "totalHH": 7.0,
+    "tareas": [
+      {
+        "proyecto": "Gestión Interna / ICA",
+        "categoria": "Gestión Interna",
+        "horas": 0.5,
+        "actividad": "Coordinación y Reuniones Técnicas",
+        "detalle": "Programación Daily"
+      },
+      {
+        "proyecto": "CCU Quilicura",
+        "categoria": "Proyectos",
+        "horas": 1.0,
+        "actividad": "Gabinete y Gestión Hidrogeológica",
+        "detalle": "CCU Renca"
+      },
+      {
+        "proyecto": "Minera Las Luces (MLC)",
+        "categoria": "Proyectos",
+        "horas": 5.5,
+        "actividad": "Supervisión de Terreno",
+        "detalle": "Terreno Las Luces"
+      }
+    ],
+    "timestamp": "2026-09-07T18:00:00.000Z",
     "estadoRevision": "Al Día"
   }
 ]

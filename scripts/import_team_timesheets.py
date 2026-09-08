@@ -21,15 +21,15 @@ os.makedirs(SHAREPOINT_DIR, exist_ok=True)
 # Mapeo canónico de Proyectos
 def normalize_project(text):
     t = str(text or "").lower()
-    # Minera Las Luces (incluye Packer según instrucción del usuario)
-    if any(k in t for k in ["packer", "las luces", "luces", "sondaje", "sondajes", "terreno ll", "multitester", "epp"]):
+    # Kinross (evaluado antes de isótopo para evitar clasificar 'HQ e isotopos Kinross' como Pimentón)
+    if "kinross" in t or "lnf" in t or "leapfrog" in t:
+        return "Kinross - LNF"
+    # Minera Las Luces (incluye Packer y MLC según instrucción del usuario)
+    elif any(k in t for k in ["packer", "las luces", "luces", "mlc", "sondaje", "sondajes", "terreno ll", "multitester", "epp"]):
         return "Minera Las Luces (MLC)"
     # Pimentón
     elif "piment" in t or "isotopo" in t or "uh" in t or "piezometr" in t or "hidroquim" in t or "balance i" in t:
         return "Minera Pimentón"
-    # Kinross
-    elif "kinross" in t or "lnf" in t or "leapfrog" in t:
-        return "Kinross - LNF"
     # WSP
     elif "wsp" in t or "glaciar" in t or "permafrost" in t:
         return "WSP - DIA Glaciares"
@@ -37,8 +37,11 @@ def normalize_project(text):
     elif "bsf" in t or "bodega san francisco" in t or "vulnerabilidad" in t:
         return "Bodega San Francisco (BSF)"
     # CCU
-    elif "ccu" in t or "quilicura" in t:
+    elif "ccu" in t or "quilicura" in t or "renca" in t:
         return "CCU Quilicura"
+    # Tambo de Oro / MyMA
+    elif "tambo" in t or "blanco" in t or "myma" in t:
+        return "HMC - Tambo de Oro"
     # Propuestas
     elif "efe" in t or "ecconsulting" in t or "consultame" in t or "propuesta" in t or "licitaci" in t:
         return "Propuestas y Licitaciones"
@@ -47,6 +50,7 @@ def normalize_project(text):
         return "Gestión Interna / ICA"
     else:
         return "Gestión Interna / ICA"
+
 
 all_records = []
 
@@ -424,13 +428,96 @@ if os.path.exists(file_jr):
         })
 
 # ==============================================================================
-# 6. ELIAS ALVARADO Y VIVIANA CASTILLO
+# 6. ELIAS ALVARADO
+# ==============================================================================
+file_ea = os.path.join(BASE_TIMESHEET_DIR, "TS Elias Alvarad.xlsx")
+if os.path.exists(file_ea):
+    wb_ea = openpyxl.load_workbook(file_ea, data_only=True)
+    daily_records_ea = defaultdict(lambda: defaultdict(float))
+    daily_notes_ea = defaultdict(lambda: defaultdict(list))
+
+    for sname in wb_ea.sheetnames:
+        ws = wb_ea[sname]
+        rows = list(ws.iter_rows(values_only=True))
+        if len(rows) < 5:
+            continue
+        date_row = rows[4] # Fila 5 contiene las fechas
+        col_dates = {}
+        for c_idx, val in enumerate(date_row[1:], start=1):
+            if isinstance(val, datetime.datetime):
+                col_dates[c_idx] = val.strftime("%Y-%m-%d")
+            elif val:
+                col_dates[c_idx] = str(val)[:10]
+
+        for r in rows[5:]:
+            for c_idx, fecha_str in col_dates.items():
+                if c_idx < len(r) and r[c_idx]:
+                    raw_val = str(r[c_idx]).strip()
+                    # REGLA OBLIGATORIA: EXCLUIR PAUSA ACTIVA, ALMUERZO Y COLACIÓN
+                    if raw_val and raw_val.lower() not in ["pausa activa", "almuerzo", "colación", "colacion"]:
+                        norm_p = normalize_project(raw_val)
+                        daily_records_ea[fecha_str][norm_p] += 0.5
+                        if raw_val not in daily_notes_ea[fecha_str][norm_p]:
+                            daily_notes_ea[fecha_str][norm_p].append(raw_val)
+
+    def get_ea_activity(proj, notes):
+        notes_str = " ".join(notes).lower()
+        if "terreno" in notes_str:
+            return "Supervisión de Terreno"
+        elif any(k in notes_str for k in ["leapfrog", "perfil", "vectorizado"]):
+            return "Modelación y Perfiles Hidrogeológicos"
+        elif any(k in notes_str for k in ["bbdd", "meteorologia", "niveles"]):
+            return "Gestión y Consolidación de BBDD"
+        elif any(k in notes_str for k in ["geofisica", "satelital"]):
+            return "Geofísica y Sensores Remotos"
+        elif any(k in notes_str for k in ["balance i", "isotopo", "hq"]):
+            return "Hidroquímica e Isótopos"
+        elif any(k in notes_str for k in ["reunion", "coordinacion", "daily", "mina"]):
+            return "Coordinación y Reuniones Técnicas"
+        elif any(k in notes_str for k in ["induccion", "acreditacion", "examen", "arranque"]):
+            return "Habilitación Operativa y Seguridad"
+        elif any(k in notes_str for k in ["packer", "propuesta"]):
+            return "Elaboración de Propuestas Técnicas"
+        else:
+            return "Gabinete y Gestión Hidrogeológica"
+
+    for fecha_str, projs in sorted(daily_records_ea.items()):
+        day_tot = sum(projs.values())
+        all_day_notes = []
+        tareas = []
+        for p, hh_p in projs.items():
+            p_notes = daily_notes_ea[fecha_str][p]
+            all_day_notes.extend(p_notes)
+            act = get_ea_activity(p, p_notes)
+            tareas.append({
+                "proyecto": p,
+                "categoria": "Proyectos" if "ICA" not in p else "Gestión Interna",
+                "horas": round(hh_p, 1),
+                "actividad": act,
+                "detalle": "; ".join(p_notes)
+            })
+
+        has_terrain_day = any("terreno" in n.lower() or "luces" in n.lower() for n in all_day_notes)
+        all_records.append({
+            "id": f"TS-EA-{fecha_str}",
+            "fecha": fecha_str,
+            "usuarioNombre": "Elias Alvarado",
+            "usuarioCorreo": "ealvarado@icageo.cl",
+            "tipoJornada": "Terreno_Extendido" if day_tot > 7.0 or has_terrain_day else "Normal",
+            "totalHH": round(day_tot, 1),
+            "tareas": tareas,
+            "timestamp": f"{fecha_str}T18:00:00.000Z",
+            "estadoRevision": "Al Día"
+        })
+
+# ==============================================================================
+# 7. VIVIANA CASTILLO
 # ==============================================================================
 # REGLA OBLIGATORIA DEL USUARIO: NO INVENTAR REGISTROS.
-# Queda prohibido generar registros simulados o imputar tareas.
-# Cada colaborador (incluidos Elias y Viviana) debe llenar sus jornadas personalmente
-# mediante el formulario de registro diario corporativo.
-# Ambos figuran en el directorio de usuarios con 0.0 HH iniciales (Pendiente de Registro).
+# Queda prohibido generar registros simulados o imputar tareas para Viviana Castillo.
+# La colaboradora debe llenar sus jornadas personalmente mediante el formulario corporativo
+# o enviar su planilla oficial.
+# Figura en el directorio de usuarios con 0.0 HH iniciales (Pendiente de Registro).
 
 # Ordenar por fecha cronológica y nombre
 all_records.sort(key=lambda x: (x["fecha"], x["usuarioNombre"]))
