@@ -1,3 +1,22 @@
+> **OBSOLETO — no implementar desde este documento.**
+>
+> Se conserva como antecedente. Problemas conocidos:
+> - Usa el dominio equivocado `@icageoconsultores.cl`; el real es `@icageo.cl`.
+> - Lista solo 5 colaboradores.
+> - El catalogo de proyectos no coincide con los que tienen horas reales.
+> - Declara `TipoActividad` como columna de Eleccion cerrada con 7 valores; los
+>   datos historicos tienen 31 valores distintos, de modo que la migracion
+>   rebotaria. Necesita `Allow fill-in`.
+> - Declara `Oficina_Efectiva` como tipo de jornada; los datos usan `Normal`.
+> - El flujo `Timesheet_AdminUpdateRecord` se autentica con un header estatico
+>   `x-admin-key`, que en un cliente publico es el mismo antipatron que la
+>   clave maestra ya eliminada.
+> - No contempla el desplazamiento de zona horaria de SharePoint (Chile es
+>   UTC-3/-4 con cambio de horario), que corrompe la semana ISO en los bordes.
+>
+> El esquema definitivo se define en la Fase 6 del plan de mejora. Ver tambien
+> [SEGURIDAD.md](SEGURIDAD.md) y [AUDITORIA_PROCEDENCIA.md](AUDITORIA_PROCEDENCIA.md).
+
 # Especificación Técnica Microsoft 365: Timesheet ICA Geoconsultores
 
 Este documento detalla la estructura formal para crear la lista de **SharePoint** en el tenant de ICA y los flujos de **Power Automate** necesarios para conectar el Formulario y el Dashboard.
