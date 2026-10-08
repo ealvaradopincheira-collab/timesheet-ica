@@ -382,21 +382,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedPeriod = periodSelect ? periodSelect.value : 'all';
 
     let filteredData = rawData;
-    let targetWeekly = 62.0; // 2 semanas estándar (all)
-    let periodSubtextStr = "Horas acumuladas del período (24 Ago - 07 Sep)";
+    let targetWeekly = 186.0; // Período completo de 6 semanas
+    let periodSubtextStr = "Horas acumuladas del período (24 Ago - 02 Oct)";
 
     if (selectedPeriod === 'w1') {
       filteredData = rawData.filter(r => r.fecha >= '2026-08-24' && r.fecha <= '2026-08-29');
       targetWeekly = 31.0;
       periodSubtextStr = "Horas acumuladas Semana 1 (24 al 29 de Agosto)";
     } else if (selectedPeriod === 'w2') {
-      filteredData = rawData.filter(r => r.fecha >= '2026-08-31' && r.fecha <= '2026-09-06');
+      filteredData = rawData.filter(r => r.fecha >= '2026-08-31' && r.fecha <= '2026-09-05');
       targetWeekly = 31.0;
-      periodSubtextStr = "Horas acumuladas Semana 2 (31 Ago al 06 de Septiembre)";
+      periodSubtextStr = "Horas acumuladas Semana 2 (31 Ago al 05 de Septiembre)";
     } else if (selectedPeriod === 'w3') {
-      filteredData = rawData.filter(r => r.fecha >= '2026-09-07' && r.fecha <= '2026-09-11');
+      filteredData = rawData.filter(r => r.fecha >= '2026-09-07' && r.fecha <= '2026-09-12');
       targetWeekly = 31.0;
-      periodSubtextStr = "Horas acumuladas Semana 3 (07 al 11 de Septiembre)";
+      periodSubtextStr = "Horas acumuladas Semana 3 (07 al 12 de Septiembre)";
+    } else if (selectedPeriod === 'w4') {
+      filteredData = rawData.filter(r => r.fecha >= '2026-09-14' && r.fecha <= '2026-09-19');
+      targetWeekly = 31.0;
+      periodSubtextStr = "Horas acumuladas Semana 4 (14 al 19 de Septiembre)";
+    } else if (selectedPeriod === 'w5') {
+      filteredData = rawData.filter(r => r.fecha >= '2026-09-21' && r.fecha <= '2026-09-26');
+      targetWeekly = 31.0;
+      periodSubtextStr = "Horas acumuladas Semana 5 (21 al 26 de Septiembre)";
+    } else if (selectedPeriod === 'w6') {
+      filteredData = rawData.filter(r => r.fecha >= '2026-09-28' && r.fecha <= '2026-10-02');
+      targetWeekly = 31.0;
+      periodSubtextStr = "Horas acumuladas Semana 6 (28 Sep al 02 de Octubre)";
     }
 
     const kpiHoursSub = document.querySelector('#kpiTotalHours + .kpi-subtext');
@@ -690,10 +702,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 6. Carga Inicial de Datos Reales Consolidados del Equipo (7 Integrantes)
   function initSeedData() {
-    const isV6 = localStorage.getItem('ica_timesheet_v6_imported');
-    if (!isV6 && window.ICA_REAL_TEAM_DATA && window.ICA_REAL_TEAM_DATA.length > 0) {
+    const isV7 = localStorage.getItem('ica_timesheet_v7_oct2026');
+    if (!isV7 && window.ICA_REAL_TEAM_DATA && window.ICA_REAL_TEAM_DATA.length > 0) {
       localStorage.setItem('ica_timesheet_data', JSON.stringify(window.ICA_REAL_TEAM_DATA));
-      localStorage.setItem('ica_timesheet_v6_imported', 'true');
+      localStorage.setItem('ica_timesheet_v7_oct2026', 'true');
     }
   }
 });
