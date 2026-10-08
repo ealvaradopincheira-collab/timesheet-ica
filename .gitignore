@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+_snapshot_integridad_2026-09-09/
+.DS_Store
+Thumbs.db
+~$*.xlsx
