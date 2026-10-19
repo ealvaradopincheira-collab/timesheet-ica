@@ -15,7 +15,7 @@
 >   UTC-3/-4 con cambio de horario), que corrompe la semana ISO en los bordes.
 >
 > El esquema definitivo se define en la Fase 6 del plan de mejora. Ver tambien
-> [SEGURIDAD.md](SEGURIDAD.md) y [AUDITORIA_PROCEDENCIA.md](AUDITORIA_PROCEDENCIA.md).
+> [SEGURIDAD.md](SEGURIDAD.md) y la auditoría de procedencia (fuera del repo, en `Gestion ICA/Timesheet_Pipeline/`).
 
 # Especificación Técnica Microsoft 365: Timesheet ICA Geoconsultores
 

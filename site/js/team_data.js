@@ -12,7 +12,7 @@
  *
  * El dataset anterior (60 jornadas / 130 tareas / 385.3 HH) quedo retirado
  * porque la auditoria de procedencia determino que 73.3 HH (19%) no eran
- * trazables a ninguna medicion. Ver AUDITORIA_PROCEDENCIA.md.
+ * trazables a ninguna medicion. Ver la auditoria en Timesheet_Pipeline (fuera del repo).
  *
  * Este archivo lo regenera `scripts/build_team_data.py` a partir del dataset
  * canonico validado. No editarlo a mano.
