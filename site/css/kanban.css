@@ -36,8 +36,8 @@
 /* Fila de Tarjetas de Métricas (KPIs) */
 .metrics-kpi-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -316,7 +316,12 @@
 }
 
 .btn-card-edit {
-  display: none; /* Se activa cuando Admin se autentica */
+  /* Antes estaba oculto y solo aparecia con body.admin-authenticated. Esa
+     clase ya no se aplica nunca: el modo administrador se elimino. El boton
+     abre el detalle de solo lectura, asi que debe estar siempre visible. */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   background: transparent;
   border: 1px solid #cbd5e1;
   color: #475569;
@@ -333,8 +338,5 @@
   border-color: var(--color-primary);
 }
 
-body.admin-authenticated .btn-card-edit {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-}
+/* La regla body.admin-authenticated .btn-card-edit se elimino junto con el
+   modo administrador. */

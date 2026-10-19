@@ -6,6 +6,8 @@
   <title>Formulario Diario Timesheet - ICA Geoconsultores</title>
   <link rel="stylesheet" href="css/styles.css?v=7">
   <link rel="stylesheet" href="css/calendar.css?v=7">
+  <!-- Politica de seguridad de contenido: ver la nota en index.html. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://graph.microsoft.com https://login.microsoftonline.com; frame-src https://login.microsoftonline.com; form-action 'none'; base-uri 'none'">
   <link rel="icon" type="image/png" href="assets/ica_logo.png">
 </head>
 <body>
@@ -61,13 +63,10 @@
             </div>
           </div>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <button type="button" class="btn-pin-action" id="btnOpenPinModal" style="font-weight: 700;">🔑 Ingresar PIN</button>
-            <button type="button" class="btn-pin-action" id="btnChangePinModal" style="display: none;">⚙️ Cambiar mi PIN</button>
-            <button type="button" class="btn-pin-action" id="btnLockSession" style="display: none; background: #fee2e2; border-color: #fca5a5; color: #991b1b;">🔒 Cerrar Sesión</button>
           </div>
         </div>
 
-        <form id="formDailyTimesheet" class="form-content-locked">
+        <form id="formDailyTimesheet">
         <!-- Metadatos de la Jornada -->
         <div class="form-meta-grid">
           <div class="input-group">
@@ -185,70 +184,10 @@
     </div>
   </main>
 
-  <!-- MODAL: INGRESO PIN PERSONAL -->
-  <div class="modal-overlay" id="modalUserPinAuth">
-    <div class="modal-card" style="max-width: 440px;">
-      <div class="modal-header">
-        <h3 id="pinModalTitle">🔑 Ingreso Seguro por PIN</h3>
-        <button type="button" class="modal-close" id="btnClosePinModal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="input-group" style="margin-bottom: 0.85rem;">
-          <label style="font-weight: 700;">👤 Selecciona tu Nombre:</label>
-          <select class="input-control" id="modalPinUserSelect" style="font-weight: 600; font-size: 0.95rem;">
-            <option value="cleon@icageo.cl">Claudia León Rojas</option>
-            <option value="cbravo@icageo.cl">Cristóbal Bravo</option>
-            <option value="ealvarado@icageo.cl">Elias Alvarado</option>
-            <option value="gmaragano@icageo.cl">Gonzalo Maragaño Carmona</option>
-            <option value="gsuarez@icageo.cl">Gonzalo Suárez</option>
-            <option value="jrodriguez@icageo.cl">Javiera Rodríguez</option>
-            <option value="vcastillo@icageo.cl">Viviana Castillo</option>
-          </select>
-        </div>
-        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
-          Ingresa tu PIN de 4 números para desbloquear la jornada de hoy.
-        </p>
-        <div class="input-group" style="align-items: center; margin-bottom: 1rem;">
-          <input type="password" class="input-control" id="inputUserPin" maxlength="4" inputmode="numeric" placeholder="••••" style="font-size: 2rem; letter-spacing: 0.5em; text-align: center; width: 180px; font-weight: 800;">
-        </div>
-        <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">
-          * PIN inicial de fábrica: <code>1234</code>. Podrás personalizarlo una vez ingreses.
-        </p>
-      </div>
-      <div class="modal-footer" style="justify-content: center;">
-        <button type="button" class="btn btn-primary" id="btnSubmitUserPin" style="width: 100%;">Validar y Desbloquear</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: CAMBIAR PIN PERSONAL -->
-  <div class="modal-overlay" id="modalChangeUserPin">
-    <div class="modal-card" style="max-width: 460px;">
-      <div class="modal-header">
-        <h3>⚙️ Cambiar mi PIN Personal</h3>
-        <button type="button" class="modal-close" id="btnCloseChangePinModal">&times;</button>
-      </div>
-      <form id="formChangeUserPin">
-        <div class="modal-body">
-          <div class="input-group" style="margin-bottom: 0.85rem;">
-            <label>PIN Actual</label>
-            <input type="password" class="input-control" id="inputCurrentPin" maxlength="4" inputmode="numeric" required placeholder="••••">
-          </div>
-          <div class="input-group" style="margin-bottom: 0.85rem;">
-            <label>Nuevo PIN (4 números)</label>
-            <input type="password" class="input-control" id="inputNewPin" maxlength="4" inputmode="numeric" required placeholder="••••">
-          </div>
-          <div class="input-group">
-            <label>Confirmar Nuevo PIN</label>
-            <input type="password" class="input-control" id="inputConfirmPin" maxlength="4" inputmode="numeric" required placeholder="••••">
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Actualizar mi PIN</button>
-        </div>
-      </form>
-    </div>
-  </div>
+  <!-- Los modales de ingreso y cambio de PIN quedaron ELIMINADOS.
+       El PIN de fabrica estaba publicado en el repositorio y en esta misma
+       pagina. La identidad la resolvera el login corporativo de M365
+       (Fase 6 del plan). -->
 
   <!-- MODAL: REGISTRO DE NUEVA PROPUESTA -->
   <div class="modal-overlay" id="modalNewProposal">
@@ -282,7 +221,7 @@
     </div>
   </div>
 
-  <script src="js/team_data.js"></script>
-  <script src="js/calendar_form.js"></script>
+  <script src="js/team_data.js?v=20260909_fase0"></script>
+  <script src="js/calendar_form.js?v=20260909_fase0"></script>
 </body>
 </html>

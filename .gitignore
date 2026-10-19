@@ -1,6 +1,30 @@
+# ── Credenciales y datos personales ─────────────────────────────
+# Nunca deben llegar al repositorio: es publico y GitHub Pages
+# servia `path: '.'` hasta la Fase 0; hoy publica solo `site/`, pero
+# el repo sigue siendo publico: todo lo trackeado es descargable.
+data/user_pins.json
+data/*.local.json
+
+# ── Datos reales del equipo ─────────────────────────────────────
+# Nombres, correos y horas por persona. La fuente de verdad es
+# SharePoint; el repo solo lleva la semilla anonimizada.
+data/
+_snapshot_integridad_*/
+
+# ── Artefactos de ingesta ───────────────────────────────────────
+ingest_report.md
+ingest_report.json
+unresolved.jsonl
+
+# ── Python ──────────────────────────────────────────────────────
 __pycache__/
 *.pyc
-_snapshot_integridad_2026-09-09/
+
+# ── Sistema ─────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Archivos de bloqueo de Office
 ~$*.xlsx
+~$*.docx

@@ -3,6 +3,18 @@
  * Lógica del Formulario con Interfaz Tipo Calendar
  */
 
+// Escapa texto libre destinado a innerHTML o a un atributo HTML.
+// Global a proposito: showToast se define fuera del DOMContentLoaded.
+function icaEsc(v) {
+  if (v === null || v === undefined) return '';
+  return String(v)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const userSelect = document.getElementById('userSelect');
   const userEmailInput = document.getElementById('userEmail');
@@ -24,7 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
     'gmaragano@icageo.cl': 'Gonzalo Maragaño Carmona',
     'gsuarez@icageo.cl': 'Gonzalo Suárez',
     'jrodriguez@icageo.cl': 'Javiera Rodríguez',
-    'vcastillo@icageo.cl': 'Viviana Castillo'
+    'vcastillo@icageo.cl': 'Viviana Castillo',
+    'jmaedo@icageo.cl': 'José Manuel Aedo',
+    'siriarte@icageo.cl': 'Sergio Iriarte'
   };
 
   // Catálogo Oficial de Proyectos con Códigos/OT de ICA
@@ -55,26 +69,32 @@ document.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
-  // Sistema de PIN de 4 Dígitos por Usuario
-  function getUserPins() {
-    const defaultPins = {
-      'cleon@icageo.cl': '1234',
-      'cbravo@icageo.cl': '1234',
-      'ealvarado@icageo.cl': '1234',
-      'gmaragano@icageo.cl': '1234',
-      'gsuarez@icageo.cl': '1234',
-      'jrodriguez@icageo.cl': '1234',
-      'vcastillo@icageo.cl': '1234'
-    };
-    const stored = localStorage.getItem('ica_user_pins');
-    if (!stored) {
-      localStorage.setItem('ica_user_pins', JSON.stringify(defaultPins));
-      return defaultPins;
-    }
-    return JSON.parse(stored);
-  }
+  // Catálogo Canónico de Actividades Hidrogeológicas
+  const activityTypes = [
+    'Redacción EETT / Informe',
+    'Modelación Numérica / Leapfrog',
+    'Hidroquímica e Isótopos',
+    'Geofísica y Sensores Remotos',
+    'Gestión y Consolidación de BBDD',
+    'Supervisión de Terreno / Ensayos',
+    'Coordinación y Reunión Técnica',
+    'Habilitación Operativa y Seguridad',
+    'Elaboración de Propuestas Técnicas',
+    'Gabinete y Gestión Hidrogeológica'
+  ];
+  window.activityTypes = activityTypes;
 
-  let authenticatedUserEmail = null;
+  // El sistema de PIN de 4 digitos quedo ELIMINADO.
+  //
+  // Los PINs se servian en `data/user_pins.json` y estaban ademas embebidos
+  // en este archivo, publicados en el repo desde el commit inicial. En un
+  // sitio estatico no hay forma de validar una credencial sin entregarla al
+  // navegador, de modo que el bloqueo del formulario era decorativo.
+  //
+  // La identidad pasa a resolverla el login corporativo de M365 (Fase 6 del
+  // plan): se deriva del token, no se elige en un <select>. Hasta entonces el
+  // formulario no autentica y lo declara explicitamente en pantalla.
+
 
   // Cargar Propuestas Personalizadas creadas por colaboradores
   function loadCustomProposals() {
@@ -99,21 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 2. Sincronizar Usuario, Correo Institucional y Bloqueo por PIN
   const pinStatusText = document.getElementById('pinStatusText');
-  const btnOpenPinModal = document.getElementById('btnOpenPinModal');
-  const btnChangePinModal = document.getElementById('btnChangePinModal');
-  const modalUserPinAuth = document.getElementById('modalUserPinAuth');
-  const inputUserPin = document.getElementById('inputUserPin');
-  const btnSubmitUserPin = document.getElementById('btnSubmitUserPin');
-  const btnClosePinModal = document.getElementById('btnClosePinModal');
-  const pinModalUserName = document.getElementById('pinModalUserName');
 
   // Modal Cambiar PIN
-  const modalChangeUserPin = document.getElementById('modalChangeUserPin');
-  const btnCloseChangePinModal = document.getElementById('btnCloseChangePinModal');
-  const formChangeUserPin = document.getElementById('formChangeUserPin');
-  const inputCurrentPin = document.getElementById('inputCurrentPin');
-  const inputNewPin = document.getElementById('inputNewPin');
-  const inputConfirmPin = document.getElementById('inputConfirmPin');
 
   // Modal Nueva Propuesta
   const btnOpenNewProposal = document.getElementById('btnOpenNewProposal');
@@ -125,36 +132,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputProposalNotes = document.getElementById('inputProposalNotes');
 
   const activeUserNameDisplay = document.getElementById('activeUserNameDisplay');
-  const btnLockSession = document.getElementById('btnLockSession');
-  const modalPinUserSelect = document.getElementById('modalPinUserSelect');
 
+  // Muestra quien esta seleccionado y advierte que no hay autenticacion.
   function checkUserPinState() {
     const currentEmail = userSelect ? userSelect.value : '';
     const currentName = userDirectory[currentEmail] || 'Colaborador';
 
-    if (authenticatedUserEmail === currentEmail && currentEmail) {
-      // Usuario autenticado
-      if (formDaily) formDaily.classList.remove('form-content-locked');
-      if (pinStatusText) {
-        pinStatusText.className = 'pin-status-text unlocked';
-        pinStatusText.innerHTML = `✓ <strong>Sesión Activa:</strong> ${currentName} (PIN Validado)`;
-      }
-      if (btnOpenPinModal) btnOpenPinModal.style.display = 'none';
-      if (btnChangePinModal) btnChangePinModal.style.display = 'inline-block';
-      if (btnLockSession) btnLockSession.style.display = 'inline-block';
-    } else {
-      // Bloqueado
-      if (formDaily) formDaily.classList.add('form-content-locked');
-      if (pinStatusText) {
-        pinStatusText.className = 'pin-status-text locked';
-        pinStatusText.innerHTML = `🔒 <strong>Sesión Bloqueada:</strong> Selecciona tu nombre e ingresa tu PIN (${currentName})`;
-      }
-      if (btnOpenPinModal) {
-        btnOpenPinModal.style.display = 'inline-block';
-        btnOpenPinModal.innerHTML = `🔑 Desbloquear (${currentName.split(' ')[0]})`;
-      }
-      if (btnChangePinModal) btnChangePinModal.style.display = 'none';
-      if (btnLockSession) btnLockSession.style.display = 'none';
+    if (formDaily) formDaily.classList.remove('form-content-locked');
+    if (pinStatusText) {
+      pinStatusText.className = 'pin-status-text locked';
+      pinStatusText.textContent =
+        'Registrando como ' + currentName + '. Sin autenticacion: los datos '
+        + 'quedan solo en este navegador y no se comparten.';
     }
   }
 
@@ -162,124 +151,11 @@ document.addEventListener('DOMContentLoaded', () => {
     userSelect.addEventListener('change', () => {
       if (userEmailInput) userEmailInput.value = userSelect.value;
       if (activeUserNameDisplay) activeUserNameDisplay.value = userDirectory[userSelect.value] || 'Colaborador';
-      if (modalPinUserSelect) modalPinUserSelect.value = userSelect.value;
-      authenticatedUserEmail = null; // Requiere re-validar PIN al cambiar de usuario
       checkUserPinState();
       recalculateDayProgress();
     });
   }
 
-  if (modalPinUserSelect) {
-    modalPinUserSelect.addEventListener('change', () => {
-      if (userSelect) userSelect.value = modalPinUserSelect.value;
-      if (userEmailInput) userEmailInput.value = modalPinUserSelect.value;
-      if (activeUserNameDisplay) activeUserNameDisplay.value = userDirectory[modalPinUserSelect.value] || 'Colaborador';
-      if (pinModalUserName) pinModalUserName.textContent = userDirectory[modalPinUserSelect.value] || 'Colaborador';
-      authenticatedUserEmail = null;
-      checkUserPinState();
-    });
-  }
-
-  if (btnLockSession) {
-    btnLockSession.addEventListener('click', () => {
-      authenticatedUserEmail = null;
-      checkUserPinState();
-      showToast('Sesión bloqueada correctamente.', 'info');
-    });
-  }
-
-  // Eventos de Autenticación PIN
-  if (btnOpenPinModal) {
-    btnOpenPinModal.addEventListener('click', () => {
-      const currentEmail = userSelect ? userSelect.value : '';
-      const currentName = userDirectory[currentEmail] || 'Colaborador';
-      if (modalPinUserSelect) modalPinUserSelect.value = currentEmail;
-      if (pinModalUserName) pinModalUserName.textContent = currentName;
-      if (inputUserPin) inputUserPin.value = '';
-      if (modalUserPinAuth) modalUserPinAuth.classList.add('open');
-      setTimeout(() => { if (inputUserPin) inputUserPin.focus(); }, 150);
-    });
-  }
-
-  if (btnClosePinModal) {
-    btnClosePinModal.addEventListener('click', () => {
-      if (modalUserPinAuth) modalUserPinAuth.classList.remove('open');
-    });
-  }
-
-  if (btnSubmitUserPin) {
-    btnSubmitUserPin.addEventListener('click', () => {
-      const currentEmail = userSelect ? userSelect.value : '';
-      const enteredPin = inputUserPin ? inputUserPin.value.trim() : '';
-      const userPins = getUserPins();
-      const expectedPin = userPins[currentEmail] || '1234';
-
-      if (enteredPin === expectedPin) {
-        authenticatedUserEmail = currentEmail;
-        checkUserPinState();
-        if (modalUserPinAuth) modalUserPinAuth.classList.remove('open');
-        showToast(`✓ Identidad validada exitosamente como ${userDirectory[currentEmail]}.`, 'success');
-      } else {
-        alert(`PIN incorrecto para ${userDirectory[currentEmail]}.\n(PIN inicial de fábrica: 1234)`);
-        if (inputUserPin) {
-          inputUserPin.value = '';
-          inputUserPin.focus();
-        }
-      }
-    });
-  }
-
-  if (inputUserPin) {
-    inputUserPin.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        btnSubmitUserPin.click();
-      }
-    });
-  }
-
-  // Cambiar PIN Personal
-  if (btnChangePinModal) {
-    btnChangePinModal.addEventListener('click', () => {
-      if (modalChangeUserPin) modalChangeUserPin.classList.add('open');
-      if (inputCurrentPin) inputCurrentPin.value = '';
-      if (inputNewPin) inputNewPin.value = '';
-      if (inputConfirmPin) inputConfirmPin.value = '';
-    });
-  }
-
-  if (btnCloseChangePinModal) {
-    btnCloseChangePinModal.addEventListener('click', () => {
-      if (modalChangeUserPin) modalChangeUserPin.classList.remove('open');
-    });
-  }
-
-  if (formChangeUserPin) {
-    formChangeUserPin.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const currentEmail = userSelect ? userSelect.value : '';
-      const userPins = getUserPins();
-      const expectedPin = userPins[currentEmail] || '1234';
-
-      if (inputCurrentPin.value !== expectedPin) {
-        alert('El PIN actual ingresado no es correcto.');
-        return;
-      }
-      if (inputNewPin.value.length !== 4 || !/^\d{4}$/.test(inputNewPin.value)) {
-        alert('El nuevo PIN debe consistir de exactamente 4 números (ej: 5821).');
-        return;
-      }
-      if (inputNewPin.value !== inputConfirmPin.value) {
-        alert('La confirmación del nuevo PIN no coincide.');
-        return;
-      }
-
-      userPins[currentEmail] = inputNewPin.value;
-      localStorage.setItem('ica_user_pins', JSON.stringify(userPins));
-      if (modalChangeUserPin) modalChangeUserPin.classList.remove('open');
-      showToast('✓ Tu PIN personal de 4 dígitos ha sido actualizado.', 'success');
-    });
-  }
 
   // Creación Colaborativa de Propuestas
   if (btnOpenNewProposal) {
@@ -298,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Cerrar modales del formulario al hacer clic fuera del recuadro
-  [modalUserPinAuth, modalChangeUserPin, modalNewProposal].forEach(modal => {
+  [modalNewProposal].forEach(modal => {
     if (modal) {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('open');
@@ -391,18 +267,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Generar opciones de categoría
     const catOptions = Object.keys(projectCatalog).map(cat => 
-      `<option value="${cat}" ${cat === defaultCat ? 'selected' : ''}>${cat}</option>`
+      `<option value="${icaEsc(cat)}" ${cat === defaultCat ? 'selected' : ''}>${icaEsc(cat)}</option>`
     ).join('');
 
     // Generar opciones de proyectos para la categoría seleccionada
     const currentProjects = projectCatalog[defaultCat] || [];
     const projOptions = currentProjects.map(proj => 
-      `<option value="${proj}" ${proj === defaultProj ? 'selected' : ''}>${proj}</option>`
+      `<option value="${icaEsc(proj)}" ${proj === defaultProj ? 'selected' : ''}>${icaEsc(proj)}</option>`
     ).join('');
 
     // Generar opciones de actividades
     const actOptions = activityTypes.map(act => 
-      `<option value="${act}" ${act === defaultAct ? 'selected' : ''}>${act}</option>`
+      `<option value="${icaEsc(act)}" ${act === defaultAct ? 'selected' : ''}>${icaEsc(act)}</option>`
     ).join('');
 
     row.innerHTML = `
@@ -429,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <select class="input-control select-activity" style="max-width: 220px;">
               ${actOptions}
             </select>
-            <input type="text" class="input-control input-desc" placeholder="Detalle del avance..." value="${defaultDesc}" style="flex: 1;">
+            <input type="text" class="input-control input-desc" placeholder="Detalle del avance..." value="${icaEsc(defaultDesc)}" style="flex: 1;">
           </div>
         </div>
         <button type="button" class="btn-remove-task" title="Eliminar Tarea">
@@ -447,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
     catSelect.addEventListener('change', () => {
       const selectedCat = catSelect.value;
       const projs = projectCatalog[selectedCat] || [];
-      projSelect.innerHTML = projs.map(p => `<option value="${p}">${p}</option>`).join('');
+      projSelect.innerHTML = projs.map(p => `<option value="${icaEsc(p)}">${icaEsc(p)}</option>`).join('');
     });
 
     hoursInput.addEventListener('input', recalculateDayProgress);
@@ -462,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnAddTask) {
     btnAddTask.addEventListener('click', () => {
-      createTaskRow('Proyectos', 'Kinross', 3.5, 'Modelación / Análisis Numérico');
+      createTaskRow('Proyectos', 'Kinross - LNF', 3.5, 'Modelación Numérica / Leapfrog', 'Desarrollo de modelo hidrogeológico');
     });
   }
 
@@ -579,35 +455,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Formatear payload oficial para SharePoint / Power Automate (TablaTimesheetICA)
-      const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-      const dateParts = dateVal.split('-').map(Number);
-      const dayIndex = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]).getDay();
-      const diaSemana = dayNames[dayIndex] || 'Lunes';
 
       const userInitials = userName.split(' ').map(n => n[0]).join('').slice(0, 3).toUpperCase();
-      const timeStamp = Date.now().toString().slice(-4);
 
-      // Tareas formateadas exactamente para TablaTimesheetICA
-      const paTasks = taskItems.map((t, idx) => ({
-        ID_Registro: `TS-${dateVal.replace(/-/g, '')}-${userInitials}-${idx + 1}`,
-        Proyecto: t.proyecto,
-        Codigo_OT: 'OT-AUTO',
-        Horas_HH: t.horas,
-        Actividad_Descripcion: t.detalle ? `${t.actividad}: ${t.detalle}` : t.actividad,
-        Estado_Aprobacion: isTerrain ? 'En Terreno' : (sumHours >= target ? 'Al Día' : 'Pendiente'),
-        Origen_Registro: 'Web App Calendar (GitHub Pages)'
-      }));
-
-      const paPayload = {
-        Fecha_Labor: dateVal,
-        Fecha_Semana: dateVal,
-        Dia_Semana: diaSemana,
-        Consultor: userName,
-        Correo_Corporativo: userEmail,
-        Tipo_Jornada: isTerrain ? 'Terreno_Extendido' : (sumHours === target ? 'Oficina_Efectiva' : 'Parcial'),
-        Total_HH: sumHours,
-        tareas: paTasks
-      };
+      // El payload PascalCase para TablaTimesheetICA se elimino junto con el
+      // envio al webhook. Mantener dos esquemas de nombres (PascalCase para
+      // Power Automate, camelCase para el almacen local) para el mismo dato
+      // era una fuente de deriva. El contrato unico se define en la Fase 6.
+      const tipoJornada = isTerrain
+        ? 'Terreno_Extendido'
+        : (sumHours === target ? 'Normal' : 'Parcial');
 
       // Guardar en Almacenamiento Local (para visualización inmediata en el Dashboard)
       const localPayload = {
@@ -615,7 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fecha: dateVal,
         usuarioCorreo: userEmail,
         usuarioNombre: userName,
-        tipoJornada: paPayload.Tipo_Jornada,
+        tipoJornada: tipoJornada,
         totalHH: sumHours,
         tareas: taskItems,
         estadoRevision: isTerrain ? 'En Terreno' : (sumHours >= target ? 'Al Día' : 'Pendiente'),
@@ -625,25 +482,17 @@ document.addEventListener('DOMContentLoaded', () => {
       saveDailyRecord(localPayload);
 
       // Envío a Power Automate si está configurado el Endpoint
-      const paEndpoint = localStorage.getItem('ica_pa_endpoint');
-      if (paEndpoint && paEndpoint.startsWith('http')) {
-        showToast('Enviando y sincronizando con SharePoint de ICA...', 'info');
-        fetch(paEndpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(paPayload),
-          mode: 'no-cors'
-        }).then(() => {
-          showToast(`✓ ¡Jornada de ${userName} sincronizada exitosamente en SharePoint!`, 'success');
-        }).catch(err => {
-          console.warn('Error al contactar Power Automate:', err);
-          showToast(`Guardado localmente. Revisa la conexión de Power Automate.`, 'warning');
-        });
-      } else {
-        showToast(`✓ Jornada de ${userName} (${sumHours} HH) guardada. (Configura el Endpoint en Acceso RRHH para envío automático a SharePoint).`, 'success');
-      }
+      // El envio al webhook de Power Automate quedo ELIMINADO.
+      //
+      // Usaba `mode: 'no-cors'`, que descarta el header Content-Type y
+      // resuelve la promesa con respuesta opaca sea 200 o 500: la app
+      // afirmaba "sincronizada exitosamente en SharePoint" sin haber
+      // escrito nada. Falso positivo garantizado. Y la URL del trigger
+      // con ?sig= es una credencial bearer que vivia en localStorage.
+      //
+      // La escritura real llega en la Fase 6 via Microsoft Graph, leyendo
+      // el status de cada peticion antes de declarar exito.
 
-      // Notificar al Dashboard si está abierto
       window.dispatchEvent(new CustomEvent('timesheet_record_saved', { detail: localPayload }));
     });
   }
@@ -659,8 +508,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inicializar con dos bloques estándar (3.5h y 3.5h) para un día normal
   updateTargetBanner();
   if (tasksContainer && tasksContainer.children.length === 0) {
-    createTaskRow('Proyectos', 'Kinross', 3.5, 'Redacción EETT / Informe', 'Metodología y resultados de modelo');
-    createTaskRow('Proyectos', 'HMC - Tambo de Oro', 3.5, 'Modelación / Análisis Numérico', 'Revisión balance hídrico');
+    createTaskRow('Proyectos', 'Kinross - LNF', 3.5, 'Redacción EETT / Informe', 'Metodología y resultados de modelo');
+    createTaskRow('Proyectos', 'HMC - Tambo de Oro', 3.5, 'Modelación Numérica / Leapfrog', 'Revisión balance hídrico');
   }
 });
 
@@ -675,9 +524,11 @@ function showToast(message, type = 'info') {
 
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
-  toast.innerHTML = `
-    <div style="font-weight: 600; font-size: 0.85rem;">${message}</div>
-  `;
+  const line = document.createElement('div');
+  line.style.fontWeight = '600';
+  line.style.fontSize = '0.85rem';
+  line.textContent = message;
+  toast.appendChild(line);
   container.appendChild(toast);
 
   setTimeout(() => {
